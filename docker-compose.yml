@@ -1,6 +1,7 @@
 version: '3'
 services:
 
+  # frontend web server
   web:
     build:
       context: .
@@ -10,6 +11,7 @@ services:
     volumes:
       - ./:/code:ro
 
+  # database server
   db:
     image: "postgres:latest"
 
