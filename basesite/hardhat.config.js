@@ -3,7 +3,7 @@ require("@nomiclabs/hardhat-waffle")
 
 // const fs = require("fs")
 // const privateKey = fs.readFileSync(".secret").toString()
-const projectId = "c391349a1e76485d9096b8f6a50b782b"
+const projectId = "this is infura id"
 
 
 // const fs = require('fs')
