@@ -1,17 +1,16 @@
 # Overall structure
-django as backend - folder: basesite, api
-react as frontend - folder: frontend
-hardhat as smart contract development environment - folder:
-    - artifacts: this folder is generate when you compile smart contract or run test. It contains all the information that is necessary to deploy and interact with the contract.
-    - contract: write smart contract in here.
-    - scripts: contains deploy.js, where you deploy smart contracts.
-    - test: write tests for smart contracts here.
-    - harhad.config.js
-    - more informations: https://hardhat.org/
+django as backend - folder: basesite, api  
+react as frontend - folder: frontend  
+hardhat as smart contract development environment - folder:  
+    - artifacts: this folder is generate when you compile smart contract or run test. It contains all the information that is necessary to deploy and interact with the contract.  
+    - contract: write smart contract in here.  
+    - scripts: contains deploy.js, where you deploy smart contracts.  
+    - test: write tests for smart contracts here.  
+    - harhad.config.js  
+    - more informations: https://hardhat.org/  
 
-## What to install
 
-# How does smart contract and frontend interact:
+# How does smart contract and frontend interact:  
 1. Write smart contract, and compile them or run test to generate artifacts (we need to get smart contracts' abi from artifacts folder)
 ```shell
 npx hardhat compile
@@ -39,7 +38,7 @@ This will open a local network for smart contracts.
 ```shell
 npx hardhat run scripts/deploy.js --network localhost
 ```
-Make sure you have the same addresses as in config.js file. Sometimes it will change. 
+Make sure you have the same addresses as in config.js file. Sometimes it will change.  
 4. cd into frontend and run:
 ```shell
 npm run dev
