@@ -1,4 +1,4 @@
-#Overall structure
+# Overall structure
 django as backend - folder: basesite, api
 react as frontend - folder: frontend
 hardhat as smart contract development environment - folder:
@@ -9,7 +9,9 @@ hardhat as smart contract development environment - folder:
     - harhad.config.js
     - more informations: https://hardhat.org/
 
-#How does smart contract and frontend interact:
+## What to install
+
+# How does smart contract and frontend interact:
 1. Write smart contract, and compile them or run test to generate artifacts (we need to get smart contracts' abi from artifacts folder)
 ```shell
 npx hardhat compile
@@ -23,7 +25,7 @@ npx hardhat run scripts/deploy.js --network localhost
 3. The above command will generates 2 smart contracts address, nft and nftmarket. To call smart contracts' function in front end, we need to have their address and abi (in artifacts folder). Save these 2 addresses in a config.js inside frontend folder.
 4. Import those into React components (see code examples, frontend/src/components/..) and use them.
 
-#How to run everything
+# How to run everything
 1. In basesite:
 ```shell
 python3 manage.py runserver
