@@ -1,0 +1,17 @@
+version: '3'
+services:
+
+  # frontend web server
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/code:ro
+
+  # database server
+  db:
+    image: "postgres:latest"
+
