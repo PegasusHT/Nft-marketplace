@@ -1,7 +1,9 @@
+from django.contrib import admin
 from django.urls import path
-from .views import RoomView, CreateRoomView
+from . import views
 
+app_name = 'api'
 urlpatterns = [
-    path('room', RoomView.as_view()),
-    path('create-room', CreateRoomView.as_view())
+    path('create_nft/', views.create_nft, "name=create-nft"),
+    path('update_nft_metadata/', views.update_nft_metadata, "name=update-nft-metadata")
 ]
