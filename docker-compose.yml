@@ -23,9 +23,6 @@ services:
       - "8080:80"
     volumes:
       - static:/static:ro
-  ganache:
-    image: trufflesuite/ganache-cli
-    command: -d -m "bone sudden draft surprise suggest exotic term garden cattle shadow example whale" --defaultBalanceEther 1000000
 
 volumes:
   static:
