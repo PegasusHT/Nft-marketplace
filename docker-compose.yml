@@ -1,7 +1,20 @@
 version: '3'
 services:
-
-  # frontend web server
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-app
+    volumes:
+      - static:/static:rw
+    environment:
+      DJANGO_MODE: production
+  db:
+    image: "postgres:latest"
+    volumes:
+      - db:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_USER: project
+      POSTGRES_PASSWORD: secret
   web:
     build:
       context: .
@@ -9,9 +22,13 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./:/code:ro
+      - static:/static:ro
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: -d -m "bone sudden draft surprise suggest exotic term garden cattle shadow example whale" --defaultBalanceEther 1000000
 
-  # database server
+volumes:
+  static:
   db:
-    image: "postgres:latest"
+
 

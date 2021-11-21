@@ -11,3 +11,4 @@ FROM nginx:latest
 
 # The command to run when the container starts (default for this image would be fine too):
 CMD nginx -g "daemon off; error_log /dev/stdout info;"
+COPY web.conf /etc/nginx/conf.d/default.conf

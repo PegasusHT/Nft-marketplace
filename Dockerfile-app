@@ -1,0 +1,29 @@
+FROM python:3.7
+WORKDIR /code
+ENV PYTHONUNBUFFERED=1
+COPY wait.sh /wait.sh
+RUN chmod +x /wait.sh
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y nodejs \
+    npm
+
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
+ADD ./ /code
+CMD /wait.sh db 5432 \
+  && python basesite/manage.py collectstatic --noinput \
+  && python basesite/manage.py migrate \
+  && python basesite/manage.py loaddata data.json \
+  && /usr/local/bin/uwsgi --ini /code/basesite/basesite/uwsgi.ini
+
+COPY basesite/package.json /package.json
+RUN npm install
+# RUN npm install npx
+# RUN npm install --save-dev hardhat
+# WORKDIR /basesite
+# CMD ["npx", "install", "--save-dev", "hardhat"]
+# CMD ["npx", "hardhat", "node"]
+# CMD ["npx", "hardhat", "run", basesite/scripts/deploy.js --network localhost]
+# WORKDIR /frontend
+# CMD["npm", "run", "dev"]

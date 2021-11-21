@@ -23,6 +23,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@nomiclabs/hardhat-ganache": "^2.0.1",
     "hardhat": "^2.6.8"
   }
 }

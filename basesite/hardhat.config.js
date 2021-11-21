@@ -1,5 +1,6 @@
 /* hardhat.config.js */
 require("@nomiclabs/hardhat-waffle")
+require("@nomiclabs/hardhat-ganache")
 
 // const fs = require("fs")
 // const privateKey = fs.readFileSync(".secret").toString()
