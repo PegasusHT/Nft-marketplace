@@ -24,6 +24,46 @@ npx hardhat run scripts/deploy.js --network localhost
 3. The above command will generates 2 smart contracts address, nft and nftmarket. To call smart contracts' function in front end, we need to have their address and abi (in artifacts folder). Save these 2 addresses in a config.js inside frontend folder.
 4. Import those into React components (see code examples, frontend/src/components/..) and use them.
 
+## My approach to running the system in Socker: (these steps don't work yet)
+1. Inside the <code>basesite</code> directory bring the containers up:
+```shell
+docker-compose down && docker system prune -f
+docker-compose build && docker-compose up
+```
+2. Open another terminal and bring up the blockchain in hardhat:
+```shell
+docker-compose exec app bash # NOTE: now you are in the docker container file system
+cd basesite/
+npx hardhat node
+```
+This will open a local network for smart contracts.
+3. Open another terminal: 
+```shell
+docker-compose exec app bash # NOTE: now you are in the docker container file system
+cd basesite/
+npx hardhat run scripts/deploy.js --network localhost
+```
+Make sure you have the same addresses as in config.js file. Sometimes it will change.  
+4.  still inside the docker container (this fails for me):
+```shell
+cd frontend/
+npm run dev #
+```
+Error:
+```
+> frontend@1.0.0 dev
+> webpack --mode development --watch
+
+sh: 1: webpack: not found
+npm ERR! code 127
+npm ERR! path /code/basesite/frontend
+npm ERR! command failed
+npm ERR! command sh -c webpack --mode development --watch
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /root/.npm/_logs/2021-11-21T05_20_36_095Z-debug.log
+```
+
 # How to run everything
 1. In basesite:
 ```shell
