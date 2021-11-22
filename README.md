@@ -36,14 +36,14 @@ docker-compose exec app bash # NOTE: now you are in the docker container file sy
 cd basesite/
 npx hardhat run scripts/deploy.js --network localhost
 ```
-This will open a local network for smart contracts.
+This will open a local network for smart contracts. <br>
 3. Open another terminal: 
 ```shell
 docker-compose exec app bash # NOTE: now you are in the docker container file system
 cd cd frontend/
 npx hardhat run scripts/deploy.js --network localhost
 ```
-<b>Make sure you have the same addresses as in config.js file. Sometimes it will change.</b>
+<b>Make sure you have the same addresses as in config.js file. Sometimes it will change.</b> <br>
 4.  Still inside the docker container:
 ```shell
 cd frontend/
