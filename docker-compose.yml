@@ -23,6 +23,8 @@ services:
       - "8080:80"
     volumes:
       - static:/static:ro
+  blockchain:
+    image: ethereumoptimism/hardhat
 
 volumes:
   static:

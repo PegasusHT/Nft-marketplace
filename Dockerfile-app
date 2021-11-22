@@ -11,6 +11,9 @@ RUN apt-get update && apt-get upgrade -y && \
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD ./ /code
+
+COPY setup.sh /setup.sh
+
 CMD /wait.sh db 5432 \
   && python basesite/manage.py collectstatic --noinput \
   && python basesite/manage.py migrate \
@@ -19,6 +22,7 @@ CMD /wait.sh db 5432 \
 
 COPY basesite/package.json /package.json
 RUN npm install
+# RUN npm install webpack
 # RUN npm install npx
 # RUN npm install --save-dev hardhat
 # WORKDIR /basesite
@@ -27,3 +31,5 @@ RUN npm install
 # CMD ["npx", "hardhat", "run", basesite/scripts/deploy.js --network localhost]
 # WORKDIR /frontend
 # CMD["npm", "run", "dev"]
+
+RUN chmod +x /setup.sh
