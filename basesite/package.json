@@ -4,12 +4,17 @@
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.3.3",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
     "axios": "^0.24.0",
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "ipfs-http-client": "^50.1.2",
-    "web3modal": "^1.9.4"
+    "react-router-dom": "^6.0.2",
+    "web3modal": "^1.9.4",
+    "webpack": "^5.64.2"
   },
   "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.",
   "version": "1.0.0",
@@ -24,6 +29,15 @@
   "license": "ISC",
   "devDependencies": {
     "@nomiclabs/hardhat-ganache": "^2.0.1",
-    "hardhat": "^2.6.8"
+    "hardhat": "^2.6.8",
+    "webpack-cli": "^4.9.1",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "babel-loader": "^8.2.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1"
   }
 }
