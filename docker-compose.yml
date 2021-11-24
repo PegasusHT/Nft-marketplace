@@ -25,6 +25,8 @@ services:
       - static:/static:ro
   blockchain:
     image: ethereumoptimism/hardhat
+    ports:
+      - "127.0.0.1:8545:8545"
 
 volumes:
   static:

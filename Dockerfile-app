@@ -12,24 +12,15 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD ./ /code
 
-COPY setup.sh /setup.sh
+COPY basesite/package.json /package.json
+RUN npm install
 
 CMD /wait.sh db 5432 \
+  && /wait.sh blockchain 8545 \
+  && cd basesite/ \
+  && npx hardhat run scripts/deploy.js --network localhost \
+  && cd ../ \
   && python basesite/manage.py collectstatic --noinput \
   && python basesite/manage.py migrate \
   && python basesite/manage.py loaddata data.json \
   && /usr/local/bin/uwsgi --ini /code/basesite/basesite/uwsgi.ini
-
-COPY basesite/package.json /package.json
-RUN npm install
-# RUN npm install webpack
-# RUN npm install npx
-# RUN npm install --save-dev hardhat
-# WORKDIR /basesite
-# CMD ["npx", "install", "--save-dev", "hardhat"]
-# CMD ["npx", "hardhat", "node"]
-# CMD ["npx", "hardhat", "run", basesite/scripts/deploy.js --network localhost]
-# WORKDIR /frontend
-# CMD["npm", "run", "dev"]
-
-RUN chmod +x /setup.sh
