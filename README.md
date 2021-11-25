@@ -31,7 +31,7 @@ docker-compose down && docker system prune -f
 docker-compose build && docker-compose up
 ```
 This step deploys the smart contracts on the local blockchain.
-We can verify this in the Docker logs as well:
+We can verify this in the Docker logs:
 ```
 blockchain_1  |   Contract deployment: <UnrecognizedContract>
 blockchain_1  |   Contract address:    0x5fbdb2315678afecb367f032d93f642f64180aa3
@@ -59,7 +59,7 @@ blockchain_1  |   Value:               0 ETH
 blockchain_1  |   Gas used:            2519355 of 2519355
 blockchain_1  |   Block #2:            0x88943b510c56a9c6ff3cc6834de88dbf20a4a439b0cc18433c96f47951a35962
 ```
-This step also brings the app and database up as well.
+This step also brings up the backend server and database as well.
 
 2. <b>Important</b>: Once our blockchain in finished setting up and our system is up we now need to connect our Metamask Wallet to the local blockchain <br>
 According to the hardhat docs: <https://hardhat.org/metamask-issue.html>
@@ -70,11 +70,26 @@ According to the hardhat docs: <https://hardhat.org/metamask-issue.html>
 2. Scroll down to settings -> then scroll down to networks 
 3. Click "Add Network"
 4. Configure the Network as follows:
-5. ![metamask_settings](/images/metamask_settings.png)
+![metamask_settings](/images/metamask_settings.png)
 
-
-3. Now when we navigate to <http://localhost:8080/> and <http://localhost:8080/create>
+5. Now, navigate to <http://localhost:8080/> and <http://localhost:8080/create>
 to use the NFT marketplace
+
+# Troubleshooting
+Sometimes, after the blockchain container is stopped and is brought back up, 
+the transactions between the Metamask Wallet and the local blockchain can be out of sync.
+
+In reality, the Ethereum blockchain is decentralized and always running on multiple nodes so this shouldn't happen in practice.
+However, when working with a single local blockchain node in a Docker container, there can be synchronization issues like the following:
+```
+Nonce too high. Expected nonce to be 0 but got 4. Note that transactions can't be queued when automining.
+```
+In this case, the work-around is to reset the account:
+1. Open metamask and click on you account (top right circle icon)
+2. Scroll down to settings -> then scroll down to advanced
+3. Scroll down to Reset account
+![reset_account](/images/reset_account.jpeg)
+<br> This should resynchronize the transactions between the Metamask Wallet and the local blockchain
 
 # How to run everything
 1. In basesite:
