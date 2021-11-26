@@ -21,7 +21,7 @@ RUN cd basesite/smart_contract/ && npm install
 CMD /wait.sh db 5432 \
   && /wait.sh blockchain 8545 \
   && cd basesite/smart_contract \
-  && npx hardhat run scripts/deploy.js --network localhost \
+  && npx hardhat run scripts/deploy.js --network localhost_docker \
   && cd ../../ \
   && python basesite/manage.py collectstatic --noinput \
   && python basesite/manage.py migrate \

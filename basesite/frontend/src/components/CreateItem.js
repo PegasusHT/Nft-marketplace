@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
+import { Form, Button } from 'react-bootstrap';
+
 import Web3Modal from 'web3modal'
 import { useNavigate } from "react-router";
 
@@ -33,7 +35,10 @@ export default function CreateItem() {
       console.log('Error uploading file: ', error)
     }  
   }
-  async function createMarket() {
+  async function createMarket(e) {
+    console.log('in here')
+    console.log(formInput)
+    e.preventDefault();
     const { name, description, price } = formInput
     if (!name || !description || !price || !fileUrl) return
     /* first, upload to IPFS */
@@ -85,34 +90,31 @@ export default function CreateItem() {
   }
 
   return (
-    <div >
-      <div >
-        <input 
-          placeholder="Asset Name"
-          onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
-        />
-        <textarea
-          placeholder="Asset Description"
-          onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
-        />
-        <input
-          placeholder="Asset Price in Eth"
-          onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
-        />
-        <input
-          type="file"
-          name="Asset"
-          onChange={onChange}
-        />
-        {
-          fileUrl && (
-            <img width="350" src={fileUrl} />
-          )
-        }
-        <button onClick={createMarket} >
-          Create Digital Asset
-        </button>
-      </div>
-    </div>
+    <Form>
+      <Form.Group className="mb-3" controlId="formAssetName">
+        <Form.Label>Name</Form.Label>
+        <Form.Control type="text" placeholder="NFT Name" onChange={e => updateFormInput({ ...formInput, name: e.target.value })} />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formAssetDesc">
+        <Form.Label>Description</Form.Label>
+        <Form.Control as="textarea" rows={3} placeholder="Enter a description for your NFT" onChange={e => updateFormInput({ ...formInput, description: e.target.value })} />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formAssetPrice">
+        <Form.Label>Value</Form.Label>
+        <Form.Control type="number" placeholder="Enter NFT value in ETH" onChange={e => updateFormInput({ ...formInput, price: e.target.value })} />
+      </Form.Group>
+      {
+        fileUrl && (
+          <img width="350" src={fileUrl} />
+        )
+      }
+      <Form.Group controlId="formFile" className="mb-3">
+        <Form.Label>Asset</Form.Label>
+        <Form.Control type="file" onChange={(e) => onChange(e)}/>
+      </Form.Group>
+      <Button variant="primary" onClick={(e) => createMarket(e)}>
+        Create NFT
+      </Button>
+    </Form>
   )
 }
