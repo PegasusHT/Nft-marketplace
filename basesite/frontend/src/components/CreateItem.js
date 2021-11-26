@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
-// import { useRouter } from 'next/router'
+
 import Web3Modal from 'web3modal'
+import { useNavigate } from "react-router";
 
 import { nftaddress, nftmarketaddress } from '../constants/constants'
 
@@ -15,7 +16,7 @@ const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null)
   const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' })
-  // const router = useRouter()
+  const navigate = useNavigate();
 
   async function onChange(e) {
     const file = e.target.files[0]
@@ -80,7 +81,7 @@ export default function CreateItem() {
     await transaction.wait()
 
     console.log('done adding to marketplace')
-    // router.push('/')
+    navigate('/')
   }
 
   return (

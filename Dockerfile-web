@@ -2,7 +2,7 @@
 # 2) nginx stage to serve frontend assets
 
 # Stage 1: Node for building frontend assets
-FROM node:16 AS builder
+FROM node:12 AS builder
 WORKDIR /app
 COPY basesite/frontend/ .
 RUN npm install && npm run build

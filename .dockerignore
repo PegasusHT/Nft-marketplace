@@ -1,2 +1,7 @@
 /images/*
 /images
+/basesite/frontend/node_modules
+/basesite/smart_contract/node_modules
+/basesite/smart_contract/artifacts
+/basesite/smart_contract/cache
+.git
