@@ -9,12 +9,6 @@ hardhat as smart contract development environment - folder:
     - harhad.config.js  
     - more informations: https://hardhat.org/  
 
-# Dependencies
-Hardhat is used through a local installation in the project.
-```shell
-npm install --save-dev hardhat
-```
-
 
 # How does smart contract and frontend interact:  
 1. Write smart contract, and compile them or run test to generate artifacts (we need to get smart contracts' abi from artifacts folder)

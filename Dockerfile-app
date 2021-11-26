@@ -12,8 +12,8 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD ./ /code
 
-COPY basesite/package.json /package.json
-RUN npm install
+COPY basesite/package.json /basesite/package.json
+RUN cd basesite/ && npm install
 
 CMD /wait.sh db 5432 \
   && /wait.sh blockchain 8545 \
