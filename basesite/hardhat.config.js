@@ -1,5 +1,6 @@
 /* hardhat.config.js */
 require("@nomiclabs/hardhat-waffle")
+require("@nomiclabs/hardhat-ganache")
 
 // const fs = require("fs")
 // const privateKey = fs.readFileSync(".secret").toString()
@@ -12,9 +13,9 @@ const projectId = "this is infura id"
 module.exports = {
   // defaultNetwork: "hardhat",
   networks: {
-    hardhat: {
-      chainId: 1337
-    },
+    localhost: {
+      url: "http://blockchain:8545"
+    }
     // mumbai: {
     //   url: `https://polygon-mumbai.infura.io/v3/${projectId}`,
     //   accounts: [privateKey]
