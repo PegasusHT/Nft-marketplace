@@ -1,14 +1,19 @@
-FROM nginx:latest
+# 1) Node image for building frontend assets
+# 2) nginx stage to serve frontend assets
 
-# Add a package when building the image:
-#RUN apt-get update \
-#  && apt-get install -y nginx-module-geoip \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
+# Stage 1: Node for building frontend assets
+FROM node:16 AS builder
+WORKDIR /app
+COPY basesite/frontend/ .
+RUN npm install && npm run build
 
-# Copy a local file when building the image:
-#COPY ./timezone /etc/timezone
 
-# The command to run when the container starts (default for this image would be fine too):
-CMD nginx -g "daemon off; error_log /dev/stdout info;"
+# Stage 2: Nginx for serving assets
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+# Remove default nginx static assets
+RUN rm -rf ./*
+COPY --from=builder /app/build .
 COPY web.conf /etc/nginx/conf.d/default.conf
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
