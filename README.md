@@ -1,94 +1,15 @@
 # NFT Marketplace
 
-## Overall Project Details
+## Overall Structure
 There are many components to the application. Each section will contain its own README for information regarding the use of the tool.
 
 | Structure       | Tool        | Description
 | -----------     | ----------- | -----------
 | Frontend        | React       | React will be responsible for handling the view, and enable the use of Metamask to handle transactions
-| Backened        | Django      | Django will be used to handle API calls  - **need to add more information**
+| Backened        | Django      | Django will be used to handle API calls
 | Smart Contract  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts
 
-## How to run using Docker:
-There are 3 Dockerfiles (app, frontend, hardhat). The Dockerfile-hardhat will open a local network, but it does not deploy the smart contract, we need to run another command to deploy them later.  
-
-1. Inside the basesite directory bring the containers up:  
-```shell
-docker-compose down && docker system prune -f
-docker-compose build && docker-compose up
-```
-2. Open another terminal, run the following command and copy the hardhat container name:  
-```shell
-docker ps --format "{{.Names}}"
-```
-3. The following command will deploy the smart contracts:
-```shell
-docker exec -it {hardhat_container_name} /bin/sh -c "cd /usr/src/app; yarn deploy:local";
-```
-4. Visit: http://localhost:3000/
-
-## Development
-The following steps have to be performed in order to get set up with development:
-
-### Installing Dependencies
-In the `frontend` and `smart_contract` directories, download and install the dependencies required
-```shell
-cd basesite/frontend/
-npm install
-
-cd basesite/smart_contract/
-npm install
-```
-
-### Running Django Server
-In the `basesite` directory, start the Django server
-```shell
-cd basesite/
-python3 manage.py runserver
-```
-
-### Running the Local Ethereum Test Network
-In a new terminal, start up a local instance of the Ethereum Network
-```shell
-cd basesite/smart_contract/
-npx hardhat node
-```
-
-### Deploy Smart Contracts
-In another terminal, deploy the smart contracts to the local network
-```shell
-cd basesite/smart_contract/
-npx hardhat run scripts/deploy.js --network localhost
-```
-
-Note: Make sure to double check the addresses of the two smart contracts and compare them with `constants.js` found in the `frontend` directory. Also, make sure to copy over `NFT.json` and `NFTMarket.json` files in `basesite/smart_contract/artifacts/contracts/` to `basesite/frontend/src/contracts/`
-
-### Run React Application
-In yet another terminal, start up the React application
-```shell
-cd basesite/frontend/
-npm start
-```
-
-
-
-----------
------------
-Older information below
-
-
-# Overall structure
-django as backend - folder: basesite, api  
-react as frontend - folder: frontend  
-hardhat as smart contract development environment - folder:  
-    - artifacts: this folder is generate when you compile smart contract or run test. It contains all the information that is necessary to deploy and interact with the contract.  
-    - contract: write smart contract in here.  
-    - scripts: contains deploy.js, where you deploy smart contracts.  
-    - test: write tests for smart contracts here.  
-    - harhad.config.js  
-    - more informations: https://hardhat.org/  
-
-## How to run in Docker:  
+## Running with Docker
 1. Inside the <code>basesite</code> directory bring the containers up:
 ```shell
 docker-compose down && docker system prune -f
@@ -215,36 +136,46 @@ In this case, the work-around is to reset the account:
 ![reset_account](/images/reset_account.jpeg)
 <br> This should resynchronize the transactions between the Metamask Wallet and the local blockchain
 
-# How does smart contract and frontend interact:  
-1. Write smart contract, and compile them or run test to generate artifacts (we need to get smart contracts' abi from artifacts folder)
-```shell
-npx hardhat compile
-or 
-npx hardhat test
-```
-2. Run deploy.scripts 
-```shell
-npx hardhat run scripts/deploy.js --network localhost
-```
-3. The above command will generates 2 smart contracts address, nft and nftmarket. To call smart contracts' function in front end, we need to have their address and abi (in artifacts folder). Save these 2 addresses in a config.js inside frontend folder.
-4. Import those into React components (see code examples, frontend/src/components/..) and use them.
+---
+## Running Local Development without Docker
+The following steps have to be performed in order to get set up with development:
 
-# How to run everything via local dev environment
-1. In basesite:
+### Installing Dependencies
+In the `frontend` and `smart_contract` directories, download and install the dependencies required
 ```shell
+cd basesite/frontend/
+npm install
+
+cd basesite/smart_contract/
+npm install
+```
+
+### Running Django Server
+In the `basesite` directory, start the Django server
+```shell
+cd basesite/
 python3 manage.py runserver
 ```
-2. Open another terminal:
+
+### Running the Local Ethereum Test Network
+In a new terminal, start up a local instance of the Ethereum Network
 ```shell
+cd basesite/smart_contract/
 npx hardhat node
 ```
-This will open a local network for smart contracts.
-3. Open another terminal run: 
+
+### Deploy Smart Contracts
+In another terminal, deploy the smart contracts to the local network
 ```shell
+cd basesite/smart_contract/
 npx hardhat run scripts/deploy.js --network localhost
 ```
-Make sure you have the same addresses as in config.js file. Sometimes it will change.  
-4. cd into frontend and run:
+
+**Note**: Make sure to double check the addresses of the two smart contracts and compare them with `constants.js` found in the `frontend` directory. Also, make sure to copy over `NFT.json` and `NFTMarket.json` files in `basesite/smart_contract/artifacts/contracts/` to `basesite/frontend/src/contracts/`
+
+### Run React Application
+In yet another terminal, start up the React application
 ```shell
-npm run dev
+cd basesite/frontend/
+npm start
 ```
