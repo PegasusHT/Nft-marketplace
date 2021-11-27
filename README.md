@@ -9,13 +9,61 @@ There are many components to the application. Each section will contain its own 
 | Backened        | Django      | Django will be used to handle API calls
 | Smart Contract  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts
 
+---             
+
+## Setting up MetaMask
+
+1. Download MetaMask extension for your browser: \
+Firefox: [https://addons.mozilla.org/en-CA/firefox/addon/ether-metamask/]\
+Chrome: [https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en]
+
+2. Create a new wallet by following the steps in MetaMask after installing the extension
+
+3. Adjust Network Settings on MetaMask to connect to local blockchain
+    - Open MetaMask and click on your account (top right circle icon)
+    - Scroll down to settings -> then scroll down to networks 
+    - Click "Add Network"
+    - Configure the network as follows:
+    ![metamask_settings](/images/metamask_settings.png)
+
+4. Import an existing test account on MetaMask
+    - Open MetaMask and click on your account (top right circle icon)
+    - Select import account
+    - Paste the private key for one of the test accounts
+        ```
+        | Account     | Private Key       
+        | ----------- | ------------------------------------------------------------------ 
+        | Account #0  | 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+        | Account #1  | 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+        | Account #2  | 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+        | Account #3  | 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
+        | Account #4  | 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+        | Account #5  | 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
+        | Account #6  | 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+        | Account #7  | 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
+        | Account #8  | 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+        | Account #9  | 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+        | Account #10 | 0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897
+        | Account #11 | 0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82
+        | Account #12 | 0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1
+        | Account #13 | 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd
+        | Account #14 | 0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa
+        | Account #15 | 0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61
+        | Account #16 | 0xea6c44ac03bff858b476bba40716402b03e41b8e97e276d1baec7c37d42484a0
+        | Account #17 | 0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd
+        | Account #18 | 0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0
+        | Account #19 | 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
+        ```
+---
+
 ## Running with Docker
-1. Inside the <code>basesite</code> directory bring the containers up:
+Inside the <code>basesite</code> directory bring the containers up:
 ```shell
 docker-compose down && docker system prune -f
 docker-compose build && docker-compose up
 ```
-This step deploys the smart contracts on the local blockchain.
+This step deploys the smart contracts on the local blockchain, the backend server, frontend, and database.
+
 We can verify this in the Docker logs:
 ```
 blockchain_1  |   Contract deployment: <UnrecognizedContract>
@@ -44,20 +92,8 @@ blockchain_1  |   Value:               0 ETH
 blockchain_1  |   Gas used:            2519355 of 2519355
 blockchain_1  |   Block #2:            0x88943b510c56a9c6ff3cc6834de88dbf20a4a439b0cc18433c96f47951a35962
 ```
-This step also brings up the backend server and database as well.
 
-2. <b>Important</b>: Once our blockchain in finished setting up and our system is up we now need to connect our Metamask Wallet to the local blockchain <br>
-According to the hardhat docs: <https://hardhat.org/metamask-issue.html>
-> MetaMask mistakenly assumes all networks in http://localhost:8545 to have a chain id of 1337, but Hardhat uses a different number by default
-
-<b>To fix this, you will configure the correct chainId of metamask Localhost 8545 network: </b> <br>
-1. Open metamask and click on you account (top right circle icon)
-2. Scroll down to settings -> then scroll down to networks 
-3. Click "Add Network"
-4. Configure the Network as follows:
-![metamask_settings](/images/metamask_settings.png)
-
-5. Now, navigate to <http://localhost:8080/> and <http://localhost:8080/create>
+Now, navigate to <http://localhost:8080/> and <http://localhost:8080/create>
 for the NFT marketplace and NFT creation views respectively
 
 # Features
@@ -171,7 +207,9 @@ cd basesite/smart_contract/
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-**Note**: Make sure to double check the addresses of the two smart contracts and compare them with `constants.js` found in the `frontend` directory. Also, make sure to copy over `NFT.json` and `NFTMarket.json` files in `basesite/smart_contract/artifacts/contracts/` to `basesite/frontend/src/contracts/`
+**Note**: Make sure to double check the addresses of the two smart contracts and compare them with `constants.js` found in the `frontend` directory. 
+
+Also, make sure to copy over `NFT.json` and `NFTMarket.json` files in `basesite/smart_contract/artifacts/contracts/` to `basesite/frontend/src/contracts/`
 
 ### Run React Application
 In yet another terminal, start up the React application
