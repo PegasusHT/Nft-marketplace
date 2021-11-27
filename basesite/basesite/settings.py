@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-    'frontend.apps.FrontendConfig'
+    # 'frontend.apps.FrontendConfig'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +86,17 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'project',
+#         'USER': 'project',
+#         'PASSWORD': 'secret',
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 
 

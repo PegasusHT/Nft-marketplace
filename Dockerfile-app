@@ -1,3 +1,6 @@
+# Dockerfile-app
+# Deploys the NFT smart contract and runs the django API server
+
 FROM python:3.7
 WORKDIR /code
 ENV PYTHONUNBUFFERED=1
@@ -12,14 +15,14 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD ./ /code
 
-COPY basesite/package.json /basesite/package.json
-RUN cd basesite/ && npm install
+COPY basesite/smart_contract/package.json /basesite/smart_contract/package.json
+RUN cd basesite/smart_contract/ && npm install
 
 CMD /wait.sh db 5432 \
   && /wait.sh blockchain 8545 \
-  && cd basesite/ \
-  && npx hardhat run scripts/deploy.js --network localhost \
-  && cd ../ \
+  && cd basesite/smart_contract \
+  && npx hardhat run scripts/deploy.js --network localhost_docker \
+  && cd ../../ \
   && python basesite/manage.py collectstatic --noinput \
   && python basesite/manage.py migrate \
   && python basesite/manage.py loaddata data.json \

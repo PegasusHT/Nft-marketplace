@@ -13,8 +13,11 @@ const projectId = "this is infura id"
 module.exports = {
   // defaultNetwork: "hardhat",
   networks: {
-    localhost: {
+    localhost_docker: {
       url: "http://blockchain:8545"
+    },
+    localhost: {
+      url: "http://localhost:8545"
     }
     // mumbai: {
     //   url: `https://polygon-mumbai.infura.io/v3/${projectId}`,

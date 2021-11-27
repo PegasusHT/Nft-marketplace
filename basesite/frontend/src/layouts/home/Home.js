@@ -1,23 +1,26 @@
-import React, { Component } from "react";
+// Packages
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
+import { useNavigate } from 'react-router-dom';
+import { Container, Button } from 'react-bootstrap';
 
+// Constants
+import { nftaddress, nftmarketaddress } from '../../constants/constants'
 
-import {
-  nftaddress, nftmarketaddress
-} from '../../config'
+// Contracts
+import NFT from '../../contracts/NFT.json'
+import Market from '../../contracts/NFTMarket.json'
 
-import NFT from '../../../artifacts/contracts/NFT.sol/NFT.json'
-import Market from '../../../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
-
-
+// Components
+import MarketNFT from '../../components/market_nft/MarketNFT';
 
 export default function Home() {
-
   const [nfts, setNfts] = useState([])
-  const [loadingState, setLoadingState] = useState('not-loaded')
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadNFTs()
   }, [])
@@ -49,7 +52,7 @@ export default function Home() {
       return item
     }))
     setNfts(items)
-    setLoadingState('loaded') 
+    setIsLoading(false);
   }
 
   async function buyNft(nft) {
@@ -61,7 +64,7 @@ export default function Home() {
     const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
 
     /* user will be prompted to pay the asking proces to complete the transaction */
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
     const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, {
       value: price
     })
@@ -69,31 +72,11 @@ export default function Home() {
     loadNFTs()
   }
 
-
-if (loadingState === 'loaded' && !nfts.length) return (<h1>No items in marketplace</h1>)
   return (
-    <div>
-      <div style={{ maxWidth: '1600px' }}>
-        <div >
-          {
-            nfts.map((nft, i) => (
-              <div key={i} >
-                <img src={nft.image} />
-                <div >
-                  <p style={{ height: '64px' }} >{nft.name}</p>
-                  <div style={{ height: '70px', overflow: 'hidden' }}>
-                    <p>{nft.description}</p>
-                  </div>
-                </div>
-                <div >
-                  <p >{nft.price} ETH</p>
-                  <button onClick={() => buyNft(nft)}>Buy</button>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </div>
+    <Container>
+      <Button onClick={() => navigate('/create')}>Create NFT</Button>
+      { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
+      { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} /> )}
+    </Container>
   )
 }
