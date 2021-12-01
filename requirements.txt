@@ -3,3 +3,4 @@ uwsgi
 psycopg2>=2.7,<2.8 --no-binary psycopg2
 web3
 djangorestframework
+django-cors-headers

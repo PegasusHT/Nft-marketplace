@@ -8,6 +8,8 @@ services:
       - static:/static:rw
     environment:
       DJANGO_MODE: production
+    ports:
+      - "127.0.0.1:8000:8000"
   db:
     image: "postgres:latest"
     volumes:

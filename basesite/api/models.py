@@ -9,7 +9,7 @@ class NFT(models.Model):
 
 
 class NFTMetadata(models.Model):
-    token_id = models.OneToOneField(NFT, on_delete=models.CASCADE)
+    nft_id = models.ForeignKey(NFT, on_delete=models.CASCADE)
     favorites = models.IntegerField(default=0)
     nft_views = models.IntegerField(default=0)
     created_date = models.DateTimeField('date created')
