@@ -74,8 +74,9 @@ export default function Home() {
 
   return (
     <Container>
-      <Button onClick={() => navigate('/create')}>Create NFT</Button>
-      { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
+      <Button onClick={() => navigate('/create')}>Create NFT</Button> <br/>
+        <Button onClick={() => navigate('/myasset')}>My Asset</Button>
+        { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
       { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} /> )}
     </Container>
   )
