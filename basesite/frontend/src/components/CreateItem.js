@@ -93,7 +93,7 @@ export default function CreateItem() {
       },
       body: JSON.stringify({
         'token_id': url,
-        'owner_alias': 'test'
+        'author_alias': 'test'
       })
     }).then((response) => response.json())
     .then((json) => {
