@@ -85,6 +85,24 @@ export default function CreateItem() {
     transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: listingPrice })
     await transaction.wait()
 
+    fetch('http://localhost:8000/api/create_nft/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'token_id': url,
+        'author_alias': 'test'
+      })
+    }).then((response) => response.json())
+    .then((json) => {
+      console.log(json)
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
     console.log('done adding to marketplace')
     navigate('/')
   }
