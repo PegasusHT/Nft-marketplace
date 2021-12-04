@@ -2,15 +2,17 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-
+import { useNavigate } from 'react-router-dom';
 
 import { nftaddress, nftmarketaddress } from '../constants/constants'
 
 import NFT from '../contracts/NFT.json'
 import Market from '../contracts/NFTMarket.json'
+import {Button, Card} from "react-bootstrap";
 
 
 export default function MyAsset() {
+    const navigate = useNavigate();
     const [nfts, setNfts] = useState([])
     const [loadingState, setLoadingState] = useState('not-loaded')
     useEffect(() => {
@@ -40,6 +42,8 @@ export default function MyAsset() {
                 seller: i.seller,
                 owner: i.owner,
                 image: meta.data.image,
+                name: meta.data.name,
+                description: meta.data.description,
             }
             return item
         }))
@@ -50,17 +54,24 @@ export default function MyAsset() {
 
     return (
     <div className="flex justify-center">
-        <p>This is my asset page</p>
+        <Button onClick={() => navigate('/')}>Home</Button> <br/>
         <div className="p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+            <p><b>My assets</b></p>
+            <div>
                 {
                     nfts.map((nft, i) => (
-                        <div key={i} className="border shadow rounded-xl overflow-hidden">
-                            <img src={nft.image} className="rounded" />
-                            <div className="p-4 bg-black">
-                                <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
-                            </div>
-                        </div>
+                        <Card key={i} style={{ width: '18rem' }}>
+                            <Card.Img variant="top" src={nft.image} />
+                            <Card.Body>
+                                <Card.Title>{nft.name}</Card.Title>
+                                <Card.Text>
+                                    <p>Description: {nft.description}</p>
+                                </Card.Text>
+                                <Card.Text>
+                                    <p>Purchased price: {nft.price} Eth</p>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
                     ))
                 }
             </div>
