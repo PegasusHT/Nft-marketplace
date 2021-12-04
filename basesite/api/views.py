@@ -1,3 +1,4 @@
+import distutils.util
 import json
 
 from django.db import IntegrityError
@@ -8,24 +9,22 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 
-from .models import NFT, NFTMetadata
+from .models import NFT, NFTMetadata, MarketPlaceInteraction, MarketPlaceComment
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def create_nft(request):
-    data = json.loads(request.body)
-    token_id = data['token_id']
-    owner_alias = data['owner_alias']
-
-
+    request_body = json.loads(request.body)
+    token_id = request_body['token_id']
+    author_alias = request_body['author_alias']
     try:
         new_nft = NFT(
             token_id=token_id,
-            owner_alias=owner_alias
+            author_alias=author_alias
         )
         new_nft.save()
         new_nft_metadata = NFTMetadata(
-            nft_id=new_nft,
+            nft=new_nft,
             created_date=timezone.now()
         )
         new_nft_metadata.save()
@@ -38,26 +37,59 @@ def create_nft(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def update_nft_favorites(request):
-    update_token_id = request.POST['token_id']
-    nft = get_object_or_404(NFT, token_id=update_token_id)
-    nft_metadata = get_object_or_404(NFTMetadata, nft_id=nft.id)
-    nft_metadata.favorites = nft_metadata.favorites + 1
+def favorite_nft(request):
+    request_body = json.loads(request.body)
+    favorite_token_id = request_body['token_id']
+    wallet_address = request_body['wallet_address']
+    is_followed = bool(distutils.util.strtobool((request_body['is_followed'])))
+
+    nft = get_object_or_404(NFT, token_id=favorite_token_id)
+    nft_metadata = get_object_or_404(NFTMetadata, nft=nft.id)
+
+    nft_metadata.favorites = nft_metadata.favorites + 1 if is_followed else max(0, nft_metadata.favorites - 1)
     nft_metadata.save()
-    response = serializers.serialize("json", [nft_metadata])
-    return HttpResponse(response)
+
+    marketplace_interaction_query_set = MarketPlaceInteraction.objects.filter(
+        nft__token_id=favorite_token_id,
+        wallet_address=wallet_address
+    )
+
+    if marketplace_interaction_query_set.exists():
+        marketplace_interaction = marketplace_interaction_query_set.get(nft=nft)
+        marketplace_interaction.is_followed = is_followed
+        marketplace_interaction.save()
+        response = serializers.serialize("json", [marketplace_interaction])
+        return HttpResponse(response)
+    else:
+        new_marketplace_interaction = MarketPlaceInteraction(
+            nft=nft,
+            wallet_address=wallet_address,
+            is_followed=is_followed
+        )
+        new_marketplace_interaction.save()
+        response = serializers.serialize("json", [new_marketplace_interaction])
+        return HttpResponse(response)
 
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def update_nft_views(request):
-    update_token_id = request.POST['token_id']
-    nft = get_object_or_404(NFT, token_id=update_token_id)
-    nft_metadata = get_object_or_404(NFTMetadata, nft_id=nft.id)
-    nft_metadata.nft_views = nft_metadata.nft_views + 1
-    nft_metadata.save()
-    response = serializers.serialize("json", [nft_metadata])
+def post_comment(request):
+    request_body = json.loads(request.body)
+    token_id = request_body['token_id']
+    comment = request_body['comment']
+    author_alias = request_body['author_alias']
+    author_address = request_body['author_address']
+
+    nft = get_object_or_404(NFT, token_id=token_id)
+    marketplace_comment = MarketPlaceComment(
+        nft=nft,
+        comment=comment,
+        author_alias=author_alias,
+        author_address=author_address
+    )
+    marketplace_comment.save()
+    response = serializers.serialize("json", [marketplace_comment])
     return HttpResponse(response)
 
 
@@ -67,8 +99,35 @@ def update_nft_views(request):
 def nft_details(request):
     token_id = request.GET.get('token_id')
     nft = get_object_or_404(NFT, token_id=token_id)
-    nft_metadata = get_object_or_404(NFTMetadata, nft_id=nft.id)
+    nft_metadata = get_object_or_404(NFTMetadata, nft=nft)
     response = serializers.serialize("json", [nft, nft_metadata])
+    return HttpResponse(response)
+
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_wallet_favorites(request):
+    request_body = json.loads(request.body)
+    wallet_address = request_body['wallet_address']
+    marketplace_interaction = NFT.objects.filter(
+        marketplaceinteraction__wallet_address=wallet_address,
+        marketplaceinteraction__is_followed=True
+    ).values()
+    response = json.dumps(list(marketplace_interaction))
+    return HttpResponse(response)
+
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_comments(request):
+    request_body = json.loads(request.body)
+    token_id = request_body['token_id']
+    marketplace_comments = MarketPlaceComment.objects.filter(
+        nft__token_id=token_id
+    ).values()
+    response = json.dumps(list(marketplace_comments))
     return HttpResponse(response)
 
 

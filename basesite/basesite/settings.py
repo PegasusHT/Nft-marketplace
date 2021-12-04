@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-^a=k@o&87q-7=6je5udsph3m$qp^bg4ri-^spwc5j+=e)&b$u3
 DEBUG = True
 
 ALLOWED_HOSTS = ['app', 'localhost']
-# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -95,17 +94,6 @@ DATABASES = {
         'PORT': 5432,
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'django_react_nft',
-#         'USER': 'colinkwok',
-#         'PASSWORD': 'root',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 
