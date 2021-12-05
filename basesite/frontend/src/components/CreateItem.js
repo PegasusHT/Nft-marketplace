@@ -1,12 +1,11 @@
-import React, { Component } from "react";
-import { useState } from 'react'
 import { ethers } from 'ethers'
+import Web3Modal from 'web3modal'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
-import { Form, Button } from 'react-bootstrap';
-
-import Web3Modal from 'web3modal'
+import { useState } from 'react'
 import { useNavigate } from "react-router";
+
+import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 
 import { nftaddress, nftmarketaddress } from '../constants/constants'
 
@@ -33,57 +32,54 @@ export default function CreateItem() {
       setFileUrl(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    }
   }
   async function createMarket(e) {
-    console.log('in here')
-    console.log(formInput)
     e.preventDefault();
+
     const { name, description, price } = formInput
-    if (!name || !description || !price || !fileUrl) return
+    if (!name || !description || !price || !fileUrl) return;
+
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name, description, image: fileUrl
-    })
+    });
+
     try {
-      const added = await client.add(data)
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      console.log('done uploading ipfs')
-      createSale(url)
+      createSale(url);
     } catch (error) {
-      console.log('Error uploading file: ', error)
-    }  
+      console.log('Error uploading file: ', error);
+    }
   }
 
   async function createSale(url) {
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    console.log('done connecting to web3modal')
-    const provider = new ethers.providers.Web3Provider(connection)    
-    const signer = provider.getSigner()
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
 
-    console.log('starting to create item')
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
     /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer)
-    let transaction = await contract.createToken(url)
-    let tx = await transaction.wait()
+    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    let transaction = await contract.createToken(url);
+    let tx = await transaction.wait();
 
-    let event = tx.events[0]
-    let value = event.args[2]
-    let tokenId = value.toNumber()
-    
-    const price = ethers.utils.parseUnits(formInput.price, 'ether')
+    let event = tx.events[0];
+    let value = event.args[2];
+    let tokenId = value.toNumber();
 
-    console.log('done creating item')
+    const price = ethers.utils.parseUnits(formInput.price, 'ether');
 
     /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-    let listingPrice = await contract.getListingPrice()
-    listingPrice = listingPrice.toString()
+    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    let listingPrice = await contract.getListingPrice();
+    listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: listingPrice })
-    await transaction.wait()
+    transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: listingPrice });
+    await transaction.wait();
 
     fetch('http://localhost:8000/api/create_nft/', {
       method: 'POST',
@@ -96,43 +92,52 @@ export default function CreateItem() {
         'author_alias': 'test'
       })
     }).then((response) => response.json())
-    .then((json) => {
-      console.log(json)
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      .then((json) => {
+        console.log(json);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    console.log('done adding to marketplace')
-    navigate('/')
+    navigate('/');
   }
 
   return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formAssetName">
-        <Form.Label>Name</Form.Label>
-        <Form.Control type="text" placeholder="NFT Name" onChange={e => updateFormInput({ ...formInput, name: e.target.value })} />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formAssetDesc">
-        <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows={3} placeholder="Enter a description for your NFT" onChange={e => updateFormInput({ ...formInput, description: e.target.value })} />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formAssetPrice">
-        <Form.Label>Value</Form.Label>
-        <Form.Control type="number" placeholder="Enter NFT value in ETH" onChange={e => updateFormInput({ ...formInput, price: e.target.value })} />
-      </Form.Group>
-      {
-        fileUrl && (
-          <img width="350" src={fileUrl} />
-        )
-      }
-      <Form.Group controlId="formFile" className="mb-3">
-        <Form.Label>Asset</Form.Label>
-        <Form.Control type="file" onChange={(e) => onChange(e)}/>
-      </Form.Group>
-      <Button variant="primary" onClick={(e) => createMarket(e)}>
-        Create NFT
-      </Button>
-    </Form>
+    <Container className="my-3">
+      <Row className="justify-content-md-center">
+        <Col xs={6} >
+          <Form>
+            <Form.Group className="mb-3" controlId="formAssetName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text" placeholder="NFT Name" onChange={e => updateFormInput({ ...formInput, name: e.target.value })} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formAssetDesc">
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows={3} placeholder="Enter a description for your NFT" onChange={e => updateFormInput({ ...formInput, description: e.target.value })} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formAssetPrice">
+              <Form.Label>Value</Form.Label>
+              <Form.Control type="number" placeholder="Enter NFT value in ETH" onChange={e => updateFormInput({ ...formInput, price: e.target.value })} />
+            </Form.Group>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Asset</Form.Label>
+              <Form.Control type="file" onChange={(e) => onChange(e)} />
+            </Form.Group>
+            {
+              fileUrl && (
+                <Card className="my-3">
+                  <Card.Img variant="top" src={fileUrl} />
+                </Card>
+              )
+            }
+            <div className="d-grid gap-2">
+              <Button variant="primary" onClick={(e) => createMarket(e)}>
+                Create NFT
+              </Button>
+            </div>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   )
 }
