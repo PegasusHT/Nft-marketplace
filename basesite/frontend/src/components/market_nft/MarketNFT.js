@@ -5,7 +5,7 @@ export default function MarketNFT(props) {
 
   return (
     <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={nft.image} />
+      <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', objectFit: 'cover' }} />
       <Card.Body>
         <Card.Title>{nft.name}</Card.Title>
         <Card.Text>
