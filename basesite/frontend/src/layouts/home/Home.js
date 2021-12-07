@@ -3,7 +3,6 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-import { useNavigate } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 
 // Constants
@@ -19,7 +18,6 @@ import MarketNFT from '../../components/market_nft/MarketNFT';
 export default function Home() {
   const [nfts, setNfts] = useState([])
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadNFTs()
@@ -74,9 +72,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Button onClick={() => navigate('/create')}>Create NFT</Button> <br/>
-        <Button onClick={() => navigate('/myasset')}>My Asset</Button>
-        { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
+      { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
       { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} /> )}
     </Container>
   )
