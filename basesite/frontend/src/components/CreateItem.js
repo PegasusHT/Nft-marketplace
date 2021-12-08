@@ -16,7 +16,7 @@ const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null)
-  const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' })
+  const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' , authorAlias: ''})
   const navigate = useNavigate();
 
   async function onChange(e) {
@@ -37,8 +37,8 @@ export default function CreateItem() {
   async function createMarket(e) {
     e.preventDefault();
 
-    const { name, description, price } = formInput
-    if (!name || !description || !price || !fileUrl) return;
+    const { name, description, price, authorAlias } = formInput
+    if (!name || !description || !price || !fileUrl || !authorAlias) return;
 
     /* first, upload to IPFS */
     const data = JSON.stringify({
@@ -89,7 +89,7 @@ export default function CreateItem() {
       },
       body: JSON.stringify({
         'token_id': url,
-        'author_alias': 'test'
+        'author_alias': formInput.authorAlias
       })
     }).then((response) => response.json())
       .then((json) => {
@@ -130,6 +130,10 @@ export default function CreateItem() {
                 </Card>
               )
             }
+            <Form.Group className="mb-3" controlId="formAssetAuthor">
+              <Form.Label>Artist Alias</Form.Label>
+              <Form.Control type="text" placeholder="Enter Artist Alias for your NFT" onChange={e => updateFormInput({ ...formInput, authorAlias: e.target.value })} />
+            </Form.Group>
             <div className="d-grid gap-2">
               <Button variant="primary" onClick={(e) => createMarket(e)}>
                 Create NFT
