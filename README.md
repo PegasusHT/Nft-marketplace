@@ -1,17 +1,30 @@
 # NFT Marketplace
 
+## Group 19 (web hacks)
+- Colin Kwok
+- Duong Dang Khoa Au
+- Quoc Huy Bui
+- Hamlet Jiang Su
+
+## Overview
+The NFT Marketplace is a web-based system for users to Create, Buy and Interact with Non-Fungible Tokens (NFTs). <br>
+All transactions for creating and buying NFT assets are backed by the decentralized [Ethereum Blockchain](https://ethereum.org/). <br>
+Users interact with the marketplace and blockchain by connecting their MetaMask wallets to create and buy digit assets with cryptocurrency (ETH).
+
 ## Overall Structure
 There are many components to the application. Each section will contain its own README for information regarding the use of the tool.
 
 | Structure       | Tool        | Description
 | -----------     | ----------- | -----------
 | Frontend        | React       | React will be responsible for handling the view, and enable the use of Metamask to handle transactions
-| Backened        | Django      | Django will be used to handle API calls
-| Smart Contract  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts
+| Backened        | Django      | Django will be used to provide API endpoints to interact with NFT metadata
+| Ethereum Blockchain  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts on the blockchain
 
 ---             
 
 ## Setting up MetaMask
+Metamask is a popular wallet for cryptocurrency that enables interaction with the NFT marketplace and other blockchain apps. <br>
+<b>Note: No "real" cyptocurrency is needed. Wallets preloaded with cryptocurrency (ETH) for testing/marking is provided.</b>
 
 1. Download MetaMask extension for your browser: \
 Firefox: [https://addons.mozilla.org/en-CA/firefox/addon/ether-metamask/]\
@@ -155,6 +168,13 @@ blockchain_1  |   Gas used:            137852 of 158852
 blockchain_1  |   Block #5:            0x003db1aaf9de5f0490236c9663e588de2ff2c6fc2fde426026e58108a2f8f035
 blockchain_1  |
 ```
+
+# The Blockchain
+
+The Ethereum blockchain used in this app runs as a node inside a Docker container.
+<b> No real cryptocurrency such as Ether (ETH) is required </b> to deploy smart contracts and transactions on this blockchain. 
+A major advantage of running the Ethereum blockchain within a Docker Container removes the necessary manual set up of
+public accounts and private keys either on the real Ethereum MainNet or other TestNets and manually loading cryptocurrency via an ETH faucet.
 
 # Troubleshooting
 Sometimes, after the blockchain container is stopped and is brought back up, 
