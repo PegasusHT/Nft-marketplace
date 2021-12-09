@@ -36,36 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-.favourite-div {
-  margin-top: 0.5rem;
-
-}
-
-.favourite-btn {
-  background: transparent;
-  border: none;
-  color: grey;
-  font-size: 1.2rem;
-  float: right;
-}
-
-.favourite-btn-clicked{
-  background: transparent;
-  border: none;
-  color: #db381f;
-  font-size: 1.2rem;
-  float: right;
-}
-
-.favourite-btn:hover{
-  color: #db381f;
-}
-
-.num-favourite{
-  float: right;
-  margin-left: 0.5rem;
-  color: grey;
-  font-size: 0.9rem;
-}

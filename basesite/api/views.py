@@ -9,10 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 
-
-from .serializers import NFTMetadataSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from .models import NFT, NFTMetadata, MarketPlaceInteraction, MarketPlaceComment
 
 @csrf_exempt
@@ -46,7 +42,8 @@ def favorite_nft(request):
     favorite_token_id = request_body['token_id']
     wallet_address = request_body['wallet_address']
     is_followed = bool(distutils.util.strtobool((request_body['is_followed'])))
-    nft = get_object_or_404(NFT, id=favorite_token_id)
+
+    nft = get_object_or_404(NFT, token_id=favorite_token_id)
     nft_metadata = get_object_or_404(NFTMetadata, nft=nft.id)
 
     nft_metadata.favorites = nft_metadata.favorites + 1 if is_followed else max(0, nft_metadata.favorites - 1)
@@ -72,6 +69,7 @@ def favorite_nft(request):
         new_marketplace_interaction.save()
         response = serializers.serialize("json", [new_marketplace_interaction])
         return HttpResponse(response)
+
 
 
 @csrf_exempt
@@ -136,13 +134,3 @@ def get_comments(request):
 
 def raise_server_error(error_message):
     return JsonResponse({'Server Error': error_message}, status=500)
-
-
-class NFTMetadataView(APIView):
-    def get(self, request, format=None):
-        token_id = request.GET.get('token_id')
-        nft = get_object_or_404(NFT, id=token_id)
-        queryset = get_object_or_404(NFTMetadata, nft=nft)
-        # queryset = NFTMetadata.objects.all()
-        serializer_class = NFTMetadataSerializer
-        return Response(NFTMetadataSerializer(queryset).data)
