@@ -95,11 +95,14 @@ def post_comment(request):
 
 
 @csrf_exempt
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def nft_details(request):
-    token_id = request.GET.get('token_id')
+    request_body = json.loads(request.body)
+    token_id = request_body['token_id']
     nft = get_object_or_404(NFT, token_id=token_id)
     nft_metadata = get_object_or_404(NFTMetadata, nft=nft)
+    nft_metadata.nft_views = nft_metadata.nft_views + 1
+    nft_metadata.save()
     response = serializers.serialize("json", [nft, nft_metadata])
     return HttpResponse(response)
 
