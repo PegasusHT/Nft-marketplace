@@ -19,6 +19,7 @@ export default function Details() {
   const [nftDetails, setNftDetails] = useState({});
   const [nftMetadata, setNftMetadata] = useState({});
 
+  const nft_token_id = `https://ipfs.infura.io/ipfs/${id}`
   useEffect(() => {
     // First, update the view count by 1, then
     // Grab the NFT details and metadata from the Django API server
@@ -42,12 +43,15 @@ export default function Details() {
       //     console.error(error);
       //   });
         
-      fetch('http://localhost:8000/api/nft_details/?token_id=https://ipfs.infura.io/ipfs/' + id, {
-        method: 'GET',
+      fetch('http://localhost:8000/api/nft_details/', {
+        method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
+        body: JSON.stringify({
+          'token_id': nft_token_id,
+        })
       }).then((response) => response.json())
         .then((result) => {
           const nft_details = result && result.length > 0 && result[0].fields;
