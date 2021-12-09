@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-import { Container, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 // Constants
 import { nftaddress, nftmarketaddress } from '../../constants/constants'
@@ -41,6 +41,7 @@ export default function Home() {
       let item = {
         price,
         tokenId: i.tokenId.toNumber(),
+        tokenUri: tokenUri,
         seller: i.seller,
         owner: i.owner,
         image: meta.data.image,
