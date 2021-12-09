@@ -20,8 +20,28 @@ export default function Details() {
   const [nftMetadata, setNftMetadata] = useState({});
 
   useEffect(() => {
+    // First, update the view count by 1, then
     // Grab the NFT details and metadata from the Django API server
     if (id) {
+      // This section will be eventually used to increase the view counter of the nft when the page is visited
+      // fetch('http://localhost:8000/api/create_nft/', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     'token_id': 'https://ipfs.infura.io/ipfs/' + id,
+      //     'author_alias': 'test'
+      //   })
+      // }).then((response) => response.json())
+      //   .then((json) => {
+      //     console.log(json);
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
+        
       fetch('http://localhost:8000/api/nft_details/?token_id=https://ipfs.infura.io/ipfs/' + id, {
         method: 'GET',
         headers: {
@@ -82,7 +102,7 @@ export default function Details() {
         <Container>
           <Row className="justify-content-center" >
             {/* This will contain the details of the nft */}
-            <Card border="dark" style={{ width: '70vw' }} className="my-3">
+            <Card border="dark" style={{ width: '50vw' }} className="my-3">
               <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', objectFit: 'cover' }} />
               <Card.Body>
                 <Card.Title as="h2" className="text-center py-1" >{nft.name}</Card.Title>

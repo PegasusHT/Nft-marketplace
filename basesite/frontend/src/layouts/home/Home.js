@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-import { Container, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 // Constants
 import { nftaddress, nftmarketaddress } from '../../constants/constants'
@@ -54,7 +54,7 @@ export default function Home() {
     setIsLoading(false);
   }
 
-  async function buyNft(e, nft) {
+  async function buyNft(nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
