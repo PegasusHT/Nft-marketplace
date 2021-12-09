@@ -41,6 +41,7 @@ export default function Home() {
       let item = {
         price,
         tokenId: i.tokenId.toNumber(),
+        tokenUri: tokenUri,
         seller: i.seller,
         owner: i.owner,
         image: meta.data.image,
@@ -53,7 +54,7 @@ export default function Home() {
     setIsLoading(false);
   }
 
-  async function buyNft(nft) {
+  async function buyNft(e, nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
