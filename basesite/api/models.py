@@ -12,6 +12,7 @@ class NFTMetadata(models.Model):
     nft = models.ForeignKey(NFT, on_delete=models.CASCADE)
     favorites = models.IntegerField(default=0)
     nft_views = models.IntegerField(default=0)
+    nft_comments = models.IntegerField(default=0)
     created_date = models.DateTimeField('date created')
 
 class MarketPlaceComment(models.Model):

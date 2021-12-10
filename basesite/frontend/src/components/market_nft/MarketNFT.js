@@ -1,7 +1,7 @@
 import { Card, Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as lightHeart } from '@fortawesome/free-regular-svg-icons'
+import { faHeart as lightHeart, faComment } from '@fortawesome/free-regular-svg-icons'
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'
 import Web3Modal from "web3modal"
 import { ethers } from 'ethers'
@@ -14,6 +14,7 @@ export default function MarketNFT(props) {
   const [favIcon, setFavIcon] = useState(lightHeart);
   const [favClass, setFavClass] = useState("favourite-btn");
   const [nftFav, setNftFav] = useState(0);
+  const [nftCom, setNftCom] = useState(0);
 
   const navigate = useNavigate();
 
@@ -97,13 +98,14 @@ export default function MarketNFT(props) {
     }).then((response) => response.json())
       .then((json) => {
         console.log(json)
-        console.log(json[1].fields.favorites)
         setNftFav(json[1].fields.favorites);
+        setNftCom(json[1].fields.nft_comments);
       })
       .catch((error) => {
         console.error(error);
       });
   },[]);
+
 
 
   return (
@@ -117,6 +119,8 @@ export default function MarketNFT(props) {
         <div className="d-grid gap-2">
           <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>
         <div className='favourite-div'>
+          <FontAwesomeIcon className='comment-icon' icon={faComment} title="Comment"/>
+          <span className='num-comment'>{nftCom}</span>
           <span className='num-favourite'>{nftFav}</span>
           <FontAwesomeIcon className={favClass} icon={favIcon} onClick={(e) => favouriteNft(e, nft)} title="Favourite"/>
         </div>

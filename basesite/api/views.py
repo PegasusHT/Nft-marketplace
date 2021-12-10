@@ -42,12 +42,10 @@ def favorite_nft(request):
     favorite_token_id = request_body['token_id']
     wallet_address = request_body['wallet_address']
     is_followed = bool(distutils.util.strtobool((request_body['is_followed'])))
+    check_if_already_follow = False
 
     nft = get_object_or_404(NFT, token_id=favorite_token_id)
     nft_metadata = get_object_or_404(NFTMetadata, nft=nft.id)
-
-    nft_metadata.favorites = nft_metadata.favorites + 1 if is_followed else max(0, nft_metadata.favorites - 1)
-    nft_metadata.save()
 
     marketplace_interaction_query_set = MarketPlaceInteraction.objects.filter(
         nft__token_id=favorite_token_id,
@@ -56,6 +54,13 @@ def favorite_nft(request):
 
     if marketplace_interaction_query_set.exists():
         marketplace_interaction = marketplace_interaction_query_set.get(nft=nft)
+        if (marketplace_interaction.is_followed and is_followed):
+            check_if_already_follow = True
+        
+        if (check_if_already_follow is False):
+            nft_metadata.favorites = nft_metadata.favorites + 1 if is_followed else max(0, nft_metadata.favorites - 1)
+            nft_metadata.save()
+
         marketplace_interaction.is_followed = is_followed
         marketplace_interaction.save()
         response = serializers.serialize("json", [marketplace_interaction])
@@ -67,6 +72,10 @@ def favorite_nft(request):
             is_followed=is_followed
         )
         new_marketplace_interaction.save()
+        if (check_if_already_follow is False):
+            nft_metadata.favorites = nft_metadata.favorites + 1 if is_followed else max(0, nft_metadata.favorites - 1)
+            nft_metadata.save()
+
         response = serializers.serialize("json", [new_marketplace_interaction])
         return HttpResponse(response)
 
@@ -82,6 +91,12 @@ def post_comment(request):
     author_address = request_body['author_address']
 
     nft = get_object_or_404(NFT, token_id=token_id)
+
+    nft_metadata = get_object_or_404(NFTMetadata, nft=nft.id)
+
+    nft_metadata.nft_comments = nft_metadata.nft_comments + 1
+    nft_metadata.save()
+
     marketplace_comment = MarketPlaceComment(
         nft=nft,
         comment=comment,
@@ -108,6 +123,7 @@ def nft_details(request):
 
 
 
+
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_wallet_favorites(request):
@@ -123,7 +139,7 @@ def get_wallet_favorites(request):
 
 
 @csrf_exempt
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def get_comments(request):
     request_body = json.loads(request.body)
     token_id = request_body['token_id']

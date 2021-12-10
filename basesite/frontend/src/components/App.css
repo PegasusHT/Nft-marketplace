@@ -63,6 +63,18 @@
   float: right;
 }
 
+.detail-fav-icon{
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
+.detail-view-icon{
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
 .favourite-btn-clicked{
   background: transparent;
   border: none;
@@ -80,4 +92,37 @@
   margin-left: 0.5rem;
   color: grey;
   font-size: 0.9rem;
+}
+
+.comment-icon {
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
+
+.num-comment{
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 0.9rem;
+}
+
+.num-view {
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 1rem;
+}
+
+.detail-num-fav {
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 1rem;
+}
+
+.comment-container {
+  margin: 2rem;
+}
+
+.post-comment-row{
+  margin: 2rem;
 }
