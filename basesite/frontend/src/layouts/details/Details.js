@@ -78,6 +78,7 @@ export default function Details() {
 
       loadNFTs();
       setUpdate(false);
+
       // updateFormInput({ authorAlias: '', comment: ''});
     }
   }, [id, update]);
@@ -140,6 +141,8 @@ export default function Details() {
     }).then((response) => response.json())
       .then((json) => {
         console.log(json);
+        setUpdate(true);
+
       })
       .catch((error) => {
         console.error(error);
@@ -149,7 +152,6 @@ export default function Details() {
     console.log("posted comment");
     updateFormInput({ authorAlias: '', comment: '' })
     setValidated(true);
-    setUpdate(true);
     handleReset();
   }
 
