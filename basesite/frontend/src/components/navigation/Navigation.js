@@ -15,6 +15,7 @@ export default function Navigation() {
           <Nav className="me-auto">
             <Nav.Link onClick={() => navigate('/')}>Marketplace</Nav.Link>
             <Nav.Link onClick={() => navigate('/myasset')}>Profile</Nav.Link>
+              <Nav.Link onClick={() => navigate('/createdItems')}>Created Items</Nav.Link>
           </Nav>
           <Nav>
             <Button onClick={() => navigate('/create')}>Create a NFT</Button>

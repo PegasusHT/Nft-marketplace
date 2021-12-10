@@ -2,18 +2,13 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-import { useNavigate } from 'react-router-dom';
 import { Container, CardGroup } from 'react-bootstrap';
-
 import { nftaddress, nftmarketaddress } from '../constants/constants'
-
 import NFT from '../contracts/NFT.json'
 import Market from '../contracts/NFTMarket.json'
-import { Row, Card } from "react-bootstrap";
-
+import { Card } from "react-bootstrap";
 
 export default function MyAsset() {
-    const navigate = useNavigate();
     const [nfts, setNfts] = useState([])
     const [isLoading, setIsLoading] = useState(true);
 
