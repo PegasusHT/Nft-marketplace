@@ -23,37 +23,42 @@ export default function Details() {
   const [nftDetails, setNftDetails] = useState({});
   const [nftMetadata, setNftMetadata] = useState({});
   const [nftComment, setNftComment] = useState([]);
-  const [update, setUpdate] = useState(false);
+  const [update, setUpdate] = useState(true);
 
   const [validated, setValidated] = useState(false);
   const formRef = useRef(null);
   const nft_token_id = `https://ipfs.infura.io/ipfs/${id}`
-  const [formInput, updateFormInput] = useState({ authorAlias: '', comment: ''})
+  const [formInput, updateFormInput] = useState({ authorAlias: '', comment: '' })
 
   useEffect(() => {
-    // First, update the view count by 1, then
-    // Grab the NFT details and metadata from the Django API server
-    if (id) {
-      // This section will be eventually used to increase the view counter of the nft when the page is visited
-      // fetch('http://localhost:8000/api/create_nft/', {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     'token_id': 'https://ipfs.infura.io/ipfs/' + id,
-      //     'author_alias': 'test'
-      //   })
-      // }).then((response) => response.json())
-      //   .then((json) => {
-      //     console.log(json);
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-        
-      fetch('http://localhost:8000/api/nft_details/', {
+    if (update) {
+      // First, update the view count by 1, then
+      // Grab the NFT details and metadata from the Django API server
+      if (id) {
+        fetch('http://localhost:8000/api/nft_details/', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'token_id': nft_token_id,
+          })
+        }).then((response) => response.json())
+          .then((result) => {
+            const nft_details = result && result.length > 0 && result[0].fields;
+            const nft_metadata = result && result.length > 1 && result[1].fields;
+
+            setNftDetails(nft_details);
+            setNftMetadata(nft_metadata);
+            console.log(nft_metadata);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+
+      fetch('http://localhost:8000/api/get_comments/', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -64,39 +69,18 @@ export default function Details() {
         })
       }).then((response) => response.json())
         .then((result) => {
-          const nft_details = result && result.length > 0 && result[0].fields;
-          const nft_metadata = result && result.length > 1 && result[1].fields;
-
-          setNftDetails(nft_details);
-          setNftMetadata(nft_metadata);
-          console.log(nft_metadata);
+          // console.log(result);
+          setNftComment(result);
         })
         .catch((error) => {
           console.error(error);
         });
+
+      loadNFTs();
+      setUpdate(false);
+      // updateFormInput({ authorAlias: '', comment: ''});
     }
-
-    fetch('http://localhost:8000/api/get_comments/', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'token_id': nft_token_id,
-      })
-    }).then((response) => response.json())
-      .then((result) => {
-          // console.log(result);
-          setNftComment(result);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    loadNFTs();
-    // updateFormInput({ authorAlias: '', comment: ''});
-  }, [id]);
+  }, [id, update]);
 
   async function loadNFTs() {
     // Get the current market NFTs
@@ -138,35 +122,36 @@ export default function Details() {
     const provider = new ethers.providers.Web3Provider(connection)
     const wallet_address = connection.selectedAddress
 
-    const {authorAlias, comment } = formInput
+    const { authorAlias, comment } = formInput
     if (!comment || !authorAlias || !wallet_address || !nft_token_id) return;
 
     fetch('http://localhost:8000/api/post_comment/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          'token_id': nft_token_id,
-          'comment': comment,
-          'author_alias': authorAlias,
-          'author_address': wallet_address
-        })
-      }).then((response) => response.json())
-        .then((json) => {
-          console.log(json);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'token_id': nft_token_id,
+        'comment': comment,
+        'author_alias': authorAlias,
+        'author_address': wallet_address
+      })
+    }).then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-      // change callUpdate to update the page
-      console.log("posted comment");  
-      updateFormInput({ authorAlias: '', comment: ''})
-      setValidated(true);
-      handleReset();
-    }
+    // change callUpdate to update the page
+    console.log("posted comment");
+    updateFormInput({ authorAlias: '', comment: '' })
+    setValidated(true);
+    setUpdate(true);
+    handleReset();
+  }
 
   const handleReset = () => {
     formRef.current.reset();
@@ -197,13 +182,13 @@ export default function Details() {
                     <Col>{nftMetadata.created_date}</Col>
                     <Col md={1} lg={1}>
                       {/* Favourites: {nftMetadata.favorites} */}
-                      <FontAwesomeIcon className='detail-fav-icon' icon={solidHeart}title="Favourite"/>
+                      <FontAwesomeIcon className='detail-fav-icon' icon={solidHeart} title="Favourite" />
                       <span className='detail-num-fav'>{nftMetadata.favorites}</span>
-                      </Col>
-                      <Col md={1} lg={1}>
-                      <FontAwesomeIcon className='detail-view-icon' icon={faEye}title="View"/>
+                    </Col>
+                    <Col md={1} lg={1}>
+                      <FontAwesomeIcon className='detail-view-icon' icon={faEye} title="View" />
                       <span className='num-view'>{nftMetadata.nft_views}</span>
-                      </Col>
+                    </Col>
                   </Row>
                 </Card.Text>
               </Card.Body>
@@ -211,42 +196,42 @@ export default function Details() {
           </Row>
           <Row>
             <Container>
-            {/* This will contain the comments */}
+              {/* This will contain the comments */}
               <h2> Comments {nftMetadata.nft_comments}</h2>
-              <Form ref={formRef}  validated={validated} onSubmit={(e) => postComment(e)}>
+              <Form ref={formRef} validated={validated} onSubmit={(e) => postComment(e)}>
                 <Row>
-                    <Col fluid="md">
-                        <Form.Group className="mb-3" controlId="formAssetName">
-                            <Form.Control as="textarea" rows={3} placeholder="Comment" onChange={e => updateFormInput({ ...formInput, comment: e.target.value })} />
-                        </Form.Group>        
-                    </Col>
+                  <Col fluid="md">
+                    <Form.Group className="mb-3" controlId="formAssetName">
+                      <Form.Control as="textarea" rows={3} placeholder="Comment" onChange={e => updateFormInput({ ...formInput, comment: e.target.value })} />
+                    </Form.Group>
+                  </Col>
                 </Row>
                 <Row className='post-comment-row'>
-                    <Col md={{ span: 1, offset: 5 }}>
-                        <h6>Post as:</h6>
-                    </Col>
-                    <Col md={{ span: 3}}>
-                        <Form.Group className="mb-3" controlId="formAssetName">
-                            <Form.Control type="text" placeholder="Name" onChange={e => updateFormInput({ ...formInput, authorAlias: e.target.value })} />
-                        </Form.Group>        
-                    </Col>
-                    <Col md={{ span: 3}}>
+                  <Col md={{ span: 1, offset: 5 }}>
+                    <h6>Post as:</h6>
+                  </Col>
+                  <Col md={{ span: 3 }}>
+                    <Form.Group className="mb-3" controlId="formAssetName">
+                      <Form.Control type="text" placeholder="Name" onChange={e => updateFormInput({ ...formInput, authorAlias: e.target.value })} />
+                    </Form.Group>
+                  </Col>
+                  <Col md={{ span: 3 }}>
                     <div className="d-grid gap-2">
                       <Button variant="primary" type="submit">
                         Post
                       </Button>
-                    </div> 
-                    </Col>
+                    </div>
+                  </Col>
                 </Row>
               </Form>
-              </Container>
-              {/* <Comment nft_token_id={nft_token_id}/> */}
+            </Container>
+            {/* <Comment nft_token_id={nft_token_id}/> */}
           </Row>
           <Row>
-            { nftComment.map((comment) => <Comment comment={comment}/> )}
+            {nftComment.map((comment) => <Comment comment={comment} />)}
           </Row>
         </Container>
       )}
-      </React.Fragment>
+    </React.Fragment>
   );
 }
