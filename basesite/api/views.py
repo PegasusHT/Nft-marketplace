@@ -33,8 +33,6 @@ def create_nft(request):
     except IntegrityError:
         return raise_server_error("Duplicate token_ids is not permitted")
 
-
-
 @csrf_exempt
 @require_http_methods(["POST"])
 def favorite_nft(request):
@@ -86,56 +84,44 @@ def up_vote_comment(request):
     comment_id = request_body['comment_id']
     wallet_address = request_body['wallet_address']
     is_up_voted = bool(distutils.util.strtobool((request_body['is_up_voted'])))
-    is_down_voted = bool(distutils.util.strtobool((request_body['is_down_voted'])))
-    check_if_already_upVoted = False
-    check_if_already_downVoted = False
 
-    comment = get_object_or_404(MarketPlaceComment, id=comment_id)
+    nftComment = get_object_or_404(MarketPlaceComment, id=comment_id)
 
     comment_interaction_query_set = CommentInteraction.objects.filter(
-        comment__id = comment_id,
+        nftComment__id = comment_id,
         wallet_address = wallet_address
     )
-    if comment_interaction_query_set.exists():
-        comment_interaction = comment_interaction_query_set.get(comment=comment)
-        if(comment_interaction.is_up_voted and is_up_voted):
-            check_if_already_upVoted = True
-        if(comment_interaction.is_down_voted and is_down_voted):
-            check_if_already_downVoted = True
+    comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
 
-        if(check_if_already_upVoted is False):
-            if(is_up_voted):
-                comment.up_votes = comment.up_votes + 1
-                if(is_down_voted is False):
-                    max(0, comment.down_votes - 1)
-            else:
-                max(0, comment.up_votes - 1)
-            comment.save()
-
-        comment_interaction.is_up_voted = is_up_voted
-        comment_interaction.save()
-        response = serializers.serialize("json", [comment_interaction])
-        return HttpResponse(response)
-
+    if(is_up_voted):
+        nftComment.up_votes = nftComment.up_votes + 1
+        if(comment_interaction.is_down_voted):
+            nftComment.down_votes = max(0, nftComment.down_votes - 1)
+            comment_interaction.is_down_voted = False
     else:
-        new_comment_interaction = CommentInteraction(
-            comment = comment,
-            wallet_address=wallet_address,
-            is_up_voted=is_up_voted,
-            is_down_voted=is_down_voted
-        )
-        new_comment_interaction.save()
-        if(check_if_already_upVoted is False):
-            if(is_up_voted):
-                comment.up_votes = comment.up_votes + 1
-                if(is_down_voted is False):
-                    max(0, comment.down_votes - 1)
-            else:
-                max(0, comment.up_votes - 1)
-            comment.save()
+        nftComment.up_votes = max(0, nftComment.up_votes - 1)
 
-        response = serializers.serialize("json", [new_comment_interaction])
-        return HttpResponse(response)
+    comment_interaction.is_up_voted = is_up_voted
+    comment_interaction.save()
+    nftComment.save()
+    response = serializers.serialize("json", [comment_interaction])
+    return HttpResponse(response)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_comment_state(request):
+    request_body = json.loads(request.body)
+    comment_id = request_body['comment_id']
+    wallet_address = request_body['wallet_address']
+
+    nftComment = get_object_or_404(MarketPlaceComment, id=comment_id)
+    comment_interaction_query_set = CommentInteraction.objects.filter(
+            nftComment__id = comment_id,
+            wallet_address = wallet_address
+        )
+    comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
+    response = serializers.serialize("json", [comment_interaction])
+    return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -143,57 +129,29 @@ def down_vote_comment(request):
     request_body = json.loads(request.body)
     comment_id = request_body['comment_id']
     wallet_address = request_body['wallet_address']
-    is_up_voted = bool(distutils.util.strtobool((request_body['is_up_voted'])))
     is_down_voted = bool(distutils.util.strtobool((request_body['is_down_voted'])))
-    check_if_already_upVoted = False
-    check_if_already_downVoted = False
 
-    comment = get_object_or_404(MarketPlaceComment, id=comment_id)
+    nftComment = get_object_or_404(MarketPlaceComment, id=comment_id)
 
     comment_interaction_query_set = CommentInteraction.objects.filter(
-        comment__id = comment_id,
+        nftComment__id = comment_id,
         wallet_address = wallet_address
     )
-    if comment_interaction_query_set.exists():
-        comment_interaction = comment_interaction_query_set.get(comment=comment)
-        if(comment_interaction.is_up_voted and is_up_voted):
-            check_if_already_upVoted = True
-        if(comment_interaction.is_down_voted and is_down_voted):
-            check_if_already_downVoted = True
+    comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
 
-        if(check_if_already_downVoted is False):
-            if(is_down_voted):
-                comment.down_votes = comment.down_votes + 1
-                if(is_up_voted is False):
-                    max(0, comment.up_votes - 1)
-            else:
-                max(0, comment.down_votes - 1)
-            comment.save()
-
-        comment_interaction.is_down_voted = is_down_voted
-        comment_interaction.save()
-        response = serializers.serialize("json", [comment_interaction])
-        return HttpResponse(response)
-
+    if(is_down_voted):
+        nftComment.down_votes = nftComment.down_votes + 1
+        if(comment_interaction.is_up_voted):
+            nftComment.up_votes = max(0, nftComment.up_votes - 1)
+            comment_interaction.is_up_voted = False
     else:
-        new_comment_interaction = CommentInteraction(
-            comment = comment,
-            wallet_address=wallet_address,
-            is_up_voted=is_up_voted,
-            is_down_voted=is_down_voted
-        )
-        new_comment_interaction.save()
-        if(check_if_already_downVoted is False):
-            if(is_down_voted):
-                comment.down_votes = comment.down_votes + 1
-                if(is_up_voted is False):
-                    max(0, comment.up_votes - 1)
-            else:
-                max(0, comment.down_votes - 1)
-            comment.save()
+        nftComment.down_votes = max(0, nftComment.down_votes - 1)
 
-        response = serializers.serialize("json", [new_comment_interaction])
-        return HttpResponse(response)
+    comment_interaction.is_down_voted = is_down_voted
+    comment_interaction.save()
+    nftComment.save()
+    response = serializers.serialize("json", [comment_interaction])
+    return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -201,11 +159,11 @@ def tips_comment(request):
     request_body = json.loads(request.body)
     comment_id = request_body['comment_id']
 
-    comment = get_object_or_404(MarketPlaceComment, id=comment_id)
-    comment.tips = comment.tips + 1
-    comment.save()
+    nftComment = get_object_or_404(MarketPlaceComment, id=comment_id)
+    nftComment.tips = nftComment.tips + 1
+    nftComment.save()
 
-    response = serializers.serialize("json", [comment])
+    response = serializers.serialize("json", [nftComment])
     return HttpResponse(response)
 
 @csrf_exempt
@@ -231,6 +189,15 @@ def post_comment(request):
         author_address=author_address
     )
     marketplace_comment.save()
+
+    new_comment_interaction = CommentInteraction(
+        nftComment = marketplace_comment,
+        wallet_address=author_address,
+        is_up_voted="False",
+        is_down_voted="False"
+    )
+    new_comment_interaction.save()
+
     response = serializers.serialize("json", [marketplace_comment])
     return HttpResponse(response)
 

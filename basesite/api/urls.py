@@ -13,5 +13,6 @@ urlpatterns = [
     path('up_vote_comment/', views.up_vote_comment, name='up_vote_comment'),
     path('down_vote_comment/', views.down_vote_comment, name='down_vote_comment'),
     path('tips_comment/', views.tips_comment, name='tips_comment'),
+    path('get_comment_state/', views.get_comment_state, name='get_comment_state'),
 
 ]
