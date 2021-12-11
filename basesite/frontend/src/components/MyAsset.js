@@ -12,7 +12,6 @@ export default function MyAsset() {
     const [nfts, setNfts] = useState([])
     const [isLoading, setIsLoading] = useState(true);
 
-
     useEffect(() => {
         loadNFTs()
     }, [])
