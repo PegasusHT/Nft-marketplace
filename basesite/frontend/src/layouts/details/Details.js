@@ -78,7 +78,6 @@ export default function Details() {
 
       loadNFTs();
       setUpdate(false);
-
       // updateFormInput({ authorAlias: '', comment: ''});
     }
   }, [id, update]);
@@ -152,6 +151,7 @@ export default function Details() {
     console.log("posted comment");
     updateFormInput({ authorAlias: '', comment: '' })
     setValidated(true);
+    setUpdate(true);
     handleReset();
   }
 
@@ -227,9 +227,12 @@ export default function Details() {
                 </Row>
               </Form>
             </Container>
-            {/* <Comment nft_token_id={nft_token_id}/> */}
           </Row>
-          <Row>
+
+            <h3>Comments</h3>
+            { !nftComment.length && <p>No comment yet.</p> }
+
+            <Row>
             {nftComment.map((comment) => <Comment comment={comment} />)}
           </Row>
         </Container>

@@ -34,7 +34,7 @@ export default function MarketNFT(props) {
     const provider = new ethers.providers.Web3Provider(connection)
     const wallet_address = connection.selectedAddress
 
-    if (favIcon == lightHeart) {
+    if (favIcon === lightHeart) {
       setFavIcon(solidHeart)
       setFavClass("favourite-btn-clicked")
       setNftFav(nftFav +1);
