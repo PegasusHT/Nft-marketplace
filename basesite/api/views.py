@@ -107,29 +107,35 @@ def up_vote_comment(request):
             if(is_up_voted):
                 comment.up_votes = comment.up_votes + 1
                 if(is_down_voted is False):
-                    comment.down_votes = comment.down_votes -1
+                    max(0, comment.down_votes - 1)
             else:
                 max(0, comment.up_votes - 1)
             comment.save()
-        else:
-            new_comment_interaction = CommentInteraction(
-                comment = comment,
-                wallet_address=wallet_address,
-                is_up_voted=is_up_voted,
-                is_down_voted=is_down_voted
-            )
-            new_comment_interaction.save()
-            if(check_if_already_upVoted is False):
-                if(is_up_voted):
-                    comment.up_votes = comment.up_votes + 1
-                    if(is_down_voted is False):
-                        comment.down_votes = comment.down_votes -1
-                else:
-                    max(0, comment.up_votes - 1)
-                comment.save()
 
-            response = serializers.serialize("json", [new_comment_interaction])
-            return HttpResponse(response)
+        comment_interaction.is_up_voted = is_up_voted
+        comment_interaction.save()
+        response = serializers.serialize("json", [comment_interaction])
+        return HttpResponse(response)
+
+    else:
+        new_comment_interaction = CommentInteraction(
+            comment = comment,
+            wallet_address=wallet_address,
+            is_up_voted=is_up_voted,
+            is_down_voted=is_down_voted
+        )
+        new_comment_interaction.save()
+        if(check_if_already_upVoted is False):
+            if(is_up_voted):
+                comment.up_votes = comment.up_votes + 1
+                if(is_down_voted is False):
+                    max(0, comment.down_votes - 1)
+            else:
+                max(0, comment.up_votes - 1)
+            comment.save()
+
+        response = serializers.serialize("json", [new_comment_interaction])
+        return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -159,29 +165,35 @@ def down_vote_comment(request):
             if(is_down_voted):
                 comment.down_votes = comment.down_votes + 1
                 if(is_up_voted is False):
-                    comment.up_votes = comment.up_votes -1
+                    max(0, comment.up_votes - 1)
             else:
                 max(0, comment.down_votes - 1)
             comment.save()
-        else:
-            new_comment_interaction = CommentInteraction(
-                comment = comment,
-                wallet_address=wallet_address,
-                is_up_voted=is_up_voted,
-                is_down_voted=is_down_voted
-            )
-            new_comment_interaction.save()
-            if(check_if_already_downVoted is False):
-                if(is_down_voted):
-                    comment.down_votes = comment.down_votes + 1
-                    if(is_up_voted is False):
-                        comment.up_votes = comment.up_votes -1
-                else:
-                    max(0, comment.down_votes - 1)
-                comment.save()
 
-            response = serializers.serialize("json", [new_comment_interaction])
-            return HttpResponse(response)
+        comment_interaction.is_down_voted = is_down_voted
+        comment_interaction.save()
+        response = serializers.serialize("json", [comment_interaction])
+        return HttpResponse(response)
+
+    else:
+        new_comment_interaction = CommentInteraction(
+            comment = comment,
+            wallet_address=wallet_address,
+            is_up_voted=is_up_voted,
+            is_down_voted=is_down_voted
+        )
+        new_comment_interaction.save()
+        if(check_if_already_downVoted is False):
+            if(is_down_voted):
+                comment.down_votes = comment.down_votes + 1
+                if(is_up_voted is False):
+                    max(0, comment.up_votes - 1)
+            else:
+                max(0, comment.down_votes - 1)
+            comment.save()
+
+        response = serializers.serialize("json", [new_comment_interaction])
+        return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])

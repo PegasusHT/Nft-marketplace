@@ -32,5 +32,5 @@ class MarketPlaceInteraction(models.Model):
 class CommentInteraction(models.Model):
     comment = models.ForeignKey(MarketPlaceComment, on_delete=models.CASCADE)
     wallet_address = models.CharField(max_length=200)
-    is_up_voted = models.BooleanField(default=True)
-    is_down_voted = models.BooleanField(default=True)
+    is_up_voted = models.BooleanField(default=False)
+    is_down_voted = models.BooleanField(default=False)

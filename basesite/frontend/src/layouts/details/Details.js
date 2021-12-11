@@ -200,6 +200,7 @@ export default function Details() {
             <Container>
               {/* This will contain the comments */}
               <h2> Comments {nftMetadata.nft_comments}</h2>
+                { !nftComment.length && <p>No comment yet.</p> }
               <Form ref={formRef} validated={validated} onSubmit={(e) => postComment(e)}>
                 <Row>
                   <Col fluid="md">
@@ -228,9 +229,6 @@ export default function Details() {
               </Form>
             </Container>
           </Row>
-
-            <h3>Comments</h3>
-            { !nftComment.length && <p>No comment yet.</p> }
 
             <Row>
             {nftComment.map((comment) => <Comment comment={comment} />)}
