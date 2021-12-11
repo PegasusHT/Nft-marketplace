@@ -8,6 +8,7 @@ import { faThumbsUp as solidThumbsUp, faThumbsDown as solidThumbsDown, faCoins} 
 
 export default function Comment(props) {
 const { comment } = props;
+console.log("Comment id: " + comment.id)
 
     const [upVoteIcon, setUpVoteIcon] = useState(regularThumbsUp);
     const [upVoteCount, setUpVoteCount] = useState(comment.up_votes);
@@ -62,15 +63,12 @@ const { comment } = props;
 
     }
 
-
-
     return (
     <Container className='comment-container'>
         <Card>
         <Card.Header> <h5 style={{color:"blue"}}>{comment.author_alias}</h5></Card.Header>
         <Card.Body>
             <Card.Text> {comment.comment}</Card.Text>
-        </Card.Body>
             <div className={"reaction-div"}>
                 <div>
                     <FontAwesomeIcon icon={upVoteIcon}
@@ -88,7 +86,7 @@ const { comment } = props;
                     {tipsCount}
                 </div>
             </div>
-
+        </Card.Body>
         </Card>
     </Container>
   )

@@ -120,9 +120,20 @@
 }
 
 .comment-container {
-  margin: 2rem;
+    box-shadow: 0 3px 10px rgb(0 0 0 );
+    border-radius: 20px;
+    margin-bottom: 25px;
+    padding: 20px;
 }
 
 .post-comment-row{
   margin: 2rem;
+}
+
+.reaction-div{
+    float: right;
+}
+.reaction-div div{
+    display: inline;
+    margin: 10px;
 }

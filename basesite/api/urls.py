@@ -10,4 +10,8 @@ urlpatterns = [
     path('nft_details/', views.nft_details, name='nft_details'),
     path('get_wallet_favorites/', views.get_wallet_favorites, name='get_wallet_favorites'),
     path('get_comments/', views.get_comments, name='get_comments'),
+    path('up_vote_comment/', views.up_vote_comment, name='up_vote_comment'),
+    path('down_vote_comment/', views.down_vote_comment, name='down_vote_comment'),
+    path('tips_comment/', views.tips_comment, name='tips_comment'),
+
 ]
