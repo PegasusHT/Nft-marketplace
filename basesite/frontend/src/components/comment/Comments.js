@@ -39,10 +39,9 @@ export default function Comment(props) {
                 setVoteIcon();
                 // console.log(upVoteIcon)
 
-
             })
             .catch((error) => {
-                console.error(error);
+                // console.error(error);
             });
 
     }, []);
