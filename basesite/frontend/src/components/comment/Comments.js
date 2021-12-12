@@ -35,27 +35,23 @@ export default function Comment(props) {
             .then((result) => {
                 setUpVoteState(result[0].fields.is_up_voted);
                 setDownVoteState(result[0].fields.is_down_voted);
-                // console.log(upVoteState)
-                setVoteIcon();
+
+                const isFieldUpvoted = result[0].fields.is_up_voted;
+                const isFieldDownvoted = result[0].fields.is_down_voted;
+                
+                if(isFieldUpvoted){
+                    setUpVoteIcon(solidThumbsUp)
+                } else setUpVoteIcon(regularThumbsUp)
+        
+                if(isFieldDownvoted){
+                    setDownVoteIcon(solidThumbsDown)
+                } else setDownVoteIcon(regularThumbsDown)
                 // console.log(upVoteIcon)
-
-
             })
             .catch((error) => {
                 console.error(error);
             });
-
     }, []);
-
-    function setVoteIcon(){
-        if(upVoteState === false ){
-            setUpVoteIcon(regularThumbsUp)
-        } else setUpVoteIcon(solidThumbsUp)
-
-        if(downVoteState === false ){
-            setDownVoteIcon(regularThumbsDown)
-        } else setDownVoteIcon(solidThumbsDown)
-    }
 
     async function upVoteComment() {
 

@@ -219,7 +219,7 @@ def nft_details(request):
 
 
 @csrf_exempt
-@require_http_methods(["GET"])
+@require_http_methods(["POST"])
 def get_wallet_favorites(request):
     request_body = json.loads(request.body)
     wallet_address = request_body['wallet_address']

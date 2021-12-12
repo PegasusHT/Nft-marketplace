@@ -85,7 +85,37 @@ export default function MarketNFT(props) {
     }
   }
 
-  useEffect(() => {
+  useEffect(async () => {
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const wallet_address = connection.selectedAddress
+
+    // Fetches the favourites of the current wallet address/account
+    fetch('http://localhost:8000/api/get_wallet_favorites/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'wallet_address': wallet_address,
+      })
+    }).then((response) => response.json())
+      .then((result) => {
+        console.log('favourites', result);
+        // setNftComment(result);
+        result.forEach((favourite) => {
+          if (favourite.token_id === nft_token_id) {
+            setFavIcon(solidHeart);
+            setFavClass("favourite-btn-clicked")
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    // Fetches the NFT details
     fetch('http://localhost:8000/api/nft_details/', {
       method: 'POST',
       headers: {
