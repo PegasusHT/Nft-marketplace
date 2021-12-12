@@ -49,7 +49,7 @@ export default function Comment(props) {
                 // console.log(upVoteIcon)
             })
             .catch((error) => {
-                console.error(error);
+                // console.error(error);
             });
     }, []);
 
