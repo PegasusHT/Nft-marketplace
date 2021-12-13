@@ -58,15 +58,12 @@ export default function Details() {
           });
       }
 
-      fetch('http://localhost:8000/api/get_comments/', {
-        method: 'POST',
+      fetch(`http://localhost:8000/api/get_comments/?token_id=${nft_token_id}`, {
+        method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          'token_id': nft_token_id,
-        })
       }).then((response) => response.json())
         .then((result) => {
           // console.log(result);

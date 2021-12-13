@@ -95,15 +95,12 @@ export default function MarketNFT(props) {
       setIsSeller("true")    }
 
     // Fetches the favourites of the current wallet address/account
-    fetch('http://localhost:8000/api/get_wallet_favorites/', {
-      method: 'POST',
+    fetch(`http://localhost:8000/api/get_wallet_favorites/?wallet_address=${wallet_address}`, {
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        'wallet_address': wallet_address,
-      })
     }).then((response) => response.json())
       .then((result) => {
         console.log('favourites', result);

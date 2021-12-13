@@ -33,6 +33,7 @@ def create_nft(request):
     except IntegrityError:
         return raise_server_error("Duplicate token_ids is not permitted")
 
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def favorite_nft(request):
@@ -77,6 +78,7 @@ def favorite_nft(request):
         response = serializers.serialize("json", [new_marketplace_interaction])
         return HttpResponse(response)
 
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def up_vote_comment(request):
@@ -119,6 +121,7 @@ def up_vote_comment(request):
         response = serializers.serialize("json", [new_comment_interaction])
         return HttpResponse(response)
 
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_comment_state(request):
@@ -134,6 +137,7 @@ def get_comment_state(request):
     comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
     response = serializers.serialize("json", [comment_interaction])
     return HttpResponse(response)
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -178,6 +182,7 @@ def down_vote_comment(request):
         return HttpResponse(response)
 
 
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def tips_comment(request):
@@ -190,6 +195,7 @@ def tips_comment(request):
 
     response = serializers.serialize("json", [nftComment])
     return HttpResponse(response)
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -227,7 +233,6 @@ def post_comment(request):
     return HttpResponse(response)
 
 
-
 @csrf_exempt
 @require_http_methods(["POST"])
 def nft_details(request):
@@ -241,13 +246,10 @@ def nft_details(request):
     return HttpResponse(response)
 
 
-
-
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["GET"])
 def get_wallet_favorites(request):
-    request_body = json.loads(request.body)
-    wallet_address = request_body['wallet_address']
+    wallet_address = request.GET.get('wallet_address')
     marketplace_interaction = NFT.objects.filter(
         marketplaceinteraction__wallet_address=wallet_address,
         marketplaceinteraction__is_followed=True
@@ -256,12 +258,10 @@ def get_wallet_favorites(request):
     return HttpResponse(response)
 
 
-
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["GET"])
 def get_comments(request):
-    request_body = json.loads(request.body)
-    token_id = request_body['token_id']
+    token_id = request.GET.get('token_id')
     marketplace_comments = MarketPlaceComment.objects.filter(
         nft__token_id=token_id
     ).values()
