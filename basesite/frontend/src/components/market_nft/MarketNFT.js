@@ -103,7 +103,7 @@ export default function MarketNFT(props) {
       },
     }).then((response) => response.json())
       .then((result) => {
-        console.log('favourites', result);
+        // console.log('favourites', result);
         // setNftComment(result);
         result.forEach((favourite) => {
           if (favourite.token_id === nft_token_id) {
@@ -128,7 +128,7 @@ export default function MarketNFT(props) {
       })
     }).then((response) => response.json())
       .then((json) => {
-        console.log(json)
+        // console.log(json)
         setNftFav(json[1].fields.favorites);
         setNftCom(json[1].fields.nft_comments);
       })
