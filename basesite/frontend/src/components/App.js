@@ -3,6 +3,7 @@ import CreateItem from "./CreateItem";
 import MyAsset from "./MyAsset";
 import Navigation from "./navigation/Navigation";
 import Details from "../layouts/details/Details";
+import Favorites from "../layouts/favorite/Favorites";
 
 import {
   BrowserRouter,
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/create" element={<CreateItem/>} />
           <Route path="/myasset" element={<MyAsset/>} />
           <Route path="/nft/:id" element={<Details/>} />
+          <Route path="/favorite" element={<Favorites/>} />
         </Routes>
       </BrowserRouter>
     );
