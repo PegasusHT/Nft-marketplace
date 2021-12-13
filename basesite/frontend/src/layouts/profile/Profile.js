@@ -5,10 +5,13 @@ import Web3Modal from "web3modal"
 import { useNavigate } from 'react-router-dom';
 import { Container, CardGroup } from 'react-bootstrap';
 
-import { nftaddress, nftmarketaddress } from '../constants/constants'
+// Constants
+import { nftaddress, nftmarketaddress } from "../../constants/constants";
 
-import NFT from '../contracts/NFT.json'
-import Market from '../contracts/NFTMarket.json'
+// Contracts
+import NFT from "../../contracts/NFT.json";
+import Market from "../../contracts/NFTMarket.json";
+
 import { Row, Card } from "react-bootstrap";
 
 
@@ -61,7 +64,7 @@ export default function MyAsset() {
             <CardGroup>
                 {nfts.map((nft, i) =>
                     <Card key={i} style={{ maxWidth: '18rem' }}>
-                        <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', paddingBottom: '1rem', objectFit: 'cover' }} />
+                        <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', paddingBottom: '1rem', objectFit: 'contain' }} />
                         <Card.Body style={{ height: '10rem' }} >
                             <Card.Title>{nft.name}</Card.Title>
                             <Card.Text style={{ marginBottom: '0.3rem' }}>
