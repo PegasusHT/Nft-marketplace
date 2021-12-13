@@ -36,3 +36,104 @@
     transform: rotate(360deg);
   }
 }
+
+
+.Item-btn{
+  color: black;
+  transition: 0.25s;
+}
+
+.Item-btn:hover,
+.Item-btn:focus {
+  box-shadow: 0.5em 0.5em 0.5em -0.4em grey;
+  transform: translateY(-0.25em);
+  transform: translateX(-0.25em);
+}
+
+.favourite-div {
+  margin-top: 0.5rem;
+
+}
+
+.favourite-btn {
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+  float: right;
+}
+
+.detail-fav-icon{
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
+.detail-view-icon{
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
+.favourite-btn-clicked{
+  background: transparent;
+  border: none;
+  color: #db381f;
+  font-size: 1.2rem;
+  float: right;
+}
+
+.favourite-btn:hover{
+  color: #db381f;
+}
+
+.num-favourite{
+  float: right;
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 0.9rem;
+}
+
+.comment-icon {
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 1.2rem;
+}
+
+.num-comment{
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 0.9rem;
+}
+
+.num-view {
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 1rem;
+}
+
+.detail-num-fav {
+  margin-left: 0.5rem;
+  color: grey;
+  font-size: 1rem;
+}
+
+.comment-container {
+    box-shadow: 0 3px 10px rgb(0 0 0 );
+    border-radius: 20px;
+    margin-bottom: 25px;
+    padding: 20px;
+}
+
+.post-comment-row{
+  margin: 2rem;
+}
+
+.reaction-div{
+    float: right;
+}
+.reaction-div div{
+    display: inline;
+    margin: 10px;
+}
