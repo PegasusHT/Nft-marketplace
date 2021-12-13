@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
-import { Container } from 'react-bootstrap';
+import { Container, Row} from 'react-bootstrap';
 
 // Constants
 import { nftaddress, nftmarketaddress } from '../../constants/constants'
@@ -99,8 +99,12 @@ export default function Favorites() {
 
   return (
     <Container>
-      { !favNFT.length && !isLoading && <h1>Empty Marketplace</h1> }
-      { favNFT.map((nft) => <MarketNFT nft={nft} buy_action={buyNft}/> )}
+      { !favNFT.length && !isLoading && <h1>Empty Favorite NFTs</h1> }
+      <Container>
+      <Row lg={3} md={2}>
+        { favNFT.map((nft) => <MarketNFT nft={nft} buy_action={buyNft}/> )}
+        </Row>
+      </Container>
     </Container>
   )
 }

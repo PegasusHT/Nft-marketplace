@@ -18,6 +18,7 @@ import MarketNFT from '../../components/market_nft/MarketNFT';
 export default function Home() {
   const [nfts, setNfts] = useState([])
   const [isLoading, setIsLoading] = useState(true);
+  const [soldNFTs, setSoldNFTs] = useState([]);
 
   useEffect(() => {
     loadNFTs()
@@ -25,10 +26,14 @@ export default function Home() {
 
   async function loadNFTs() {
     /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider()
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+        
+    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
-    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider)
-    const data = await marketContract.fetchMarketItems()
+    const data = await marketContract.fetchItemsCreated()
 
     /*
     *  map over items returned from smart contract and format 
@@ -51,7 +56,11 @@ export default function Home() {
       }
       return item
     }))
+
+    const soldItems = items.filter(item => item.sold)
     setNfts(items)
+    // console.log(items)
+    setSoldNFTs(soldItems)
     setIsLoading(false);
   }
 
@@ -72,14 +81,27 @@ export default function Home() {
     loadNFTs()
   }
 
+  if (!nfts.length && !isLoading ) {
+      return (<h1>Empty Dashboard</h1>)
+  }
   return (
     <Container>
-      { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
-      <Container>
+        <Container>
+        <h1> Item Created</h1>
         <Row lg={3} md={2}>
-          { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
+            { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
         </Row>
-      </Container>
+        </Container>
+
+        { !soldNFTs.length ? null: 
+        (
+            <Container>
+            <h1> Item Sold</h1>
+            <Row lg={3} md={2}>
+                { soldNFTs.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
+            </Row>
+            </Container>
+        )}
     </Container>
   )
 }
