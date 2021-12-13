@@ -2,7 +2,7 @@ import { Card, Button, Col } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart as lightHeart, faComment } from '@fortawesome/free-regular-svg-icons'
-import { faHeart as solidHeart, faEthereum } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as solidHeart} from '@fortawesome/free-solid-svg-icons'
 import Web3Modal from "web3modal"
 import { ethers } from 'ethers'
 import '../App.css'
