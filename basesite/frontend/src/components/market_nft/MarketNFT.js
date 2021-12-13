@@ -1,11 +1,12 @@
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Col } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart as lightHeart, faComment } from '@fortawesome/free-regular-svg-icons'
-import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as solidHeart, faEthereum } from '@fortawesome/free-solid-svg-icons'
 import Web3Modal from "web3modal"
 import { ethers } from 'ethers'
 import '../App.css'
+import ethereumIcon from '../../images/eth-icon.webp'
 
 import { useNavigate } from "react-router";
 
@@ -20,6 +21,7 @@ export default function MarketNFT(props) {
 
   const nftHash = nft && nft.tokenUri.replace('https://ipfs.infura.io/ipfs/','');
   const nft_token_id = `https://ipfs.infura.io/ipfs/${nftHash}`
+
 
 
   async function favouriteNft(e, nft) {
@@ -116,7 +118,8 @@ export default function MarketNFT(props) {
         console.error(error);
       });
 
-    // Fetches the NFT details
+    // Fetches the NFT details        <Card.Img className='ethereumIcon' src={ethereumIcon} style={{ height: '100%', width: '10%', objectFit: 'cover' }} />
+
     fetch('http://localhost:8000/api/nft_details/', {
       method: 'POST',
       headers: {
@@ -137,27 +140,39 @@ export default function MarketNFT(props) {
       });
   },[]);
 
-
-
+  //need to use this function on onClick because sold item will not be able to view in detail
+  function onclickNavigate() {
+      if (nft.sold == false) {
+        navigate(`/nft/${nftHash}`)
+      }
+      else {
+        alert('This NFT has been sold. Unable to view this NFT in detail');
+      }
+  }
+  
   return (
-    <Card className='Item-btn' style={{ width: '18rem' }} onClick={() => navigate(`/nft/${nftHash}`)}>
-      <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', objectFit: 'cover' }} />
-      <Card.Body>
-        <Card.Title>{nft.name}</Card.Title>
-        <Card.Text>
-          {nft.description}
-        </Card.Text>
-        <div className="d-grid gap-2">
-          { !isSeller && <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
-        <div className='favourite-div'>
-          <FontAwesomeIcon className='comment-icon' icon={faComment} title="Comment"/>
-          <span className='num-comment'>{nftCom}</span>
-          <span className='num-favourite'>{nftFav}</span>
-          <FontAwesomeIcon className={favClass} icon={favIcon} onClick={(e) => favouriteNft(e, nft)} title="Favourite"/>
-        </div>
-        {/* <Button variant="secondary" onClick={() => navigate(`/nft/${nftHash}`)}>Details</Button> */}
-        </div>
-      </Card.Body>
-    </Card>
+    <Col className='col-nft-container'>
+      <Card className='Item-btn' style={{ width: '18rem' }} onClick={() => onclickNavigate()}>
+        <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', objectFit: 'cover' }} />
+        <Card.Body>
+          <Card.Title>{nft.name}</Card.Title>
+          <Card.Text>
+            <img className='ethereum-icon' src={ethereumIcon} title='Price' alt=""/>
+            <span className="nft-price">{nft.price}</span>
+            <br/>
+            {nft.description}
+          </Card.Text>
+          <div className="d-grid gap-2">
+            { !isSeller && <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
+          <div className='favourite-div'>
+            <FontAwesomeIcon className='comment-icon' icon={faComment} title="Comment"/>
+            <span className='num-comment'>{nftCom}</span>
+            <span className='num-favourite'>{nftFav}</span>
+            <FontAwesomeIcon className={favClass} icon={favIcon} onClick={(e) => favouriteNft(e, nft)} title="Favourite"/>
+          </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </Col>
   );
 }

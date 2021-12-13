@@ -37,7 +37,9 @@
   }
 }
 
-
+.col-nft-container{
+  margin-bottom: 1.5rem;
+}
 .Item-btn{
   color: black;
   transition: 0.25s;
@@ -45,7 +47,7 @@
 
 .Item-btn:hover,
 .Item-btn:focus {
-  box-shadow: 0.5em 0.5em 0.5em -0.4em grey;
+  box-shadow: 0.8em 0.5em 0.5em -0.4em rgba(31, 73, 125, 0.8), -0.8em 0.5em 0.5em -0.4em rgba(31, 73, 125, 0.8);;
   transform: translateY(-0.25em);
   transform: translateX(-0.25em);
 }
@@ -137,3 +139,15 @@
     display: inline;
     margin: 10px;
 }
+
+
+.ethereum-icon{
+  width: 7%;
+  float: left;
+  /* margin-top: 1rem; */
+}
+ .nft-price{
+  margin-left: 0.2rem;
+  font-weight: bold;
+ }
+

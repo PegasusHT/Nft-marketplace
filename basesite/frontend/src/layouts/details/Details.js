@@ -30,6 +30,7 @@ export default function Details() {
   const nft_token_id = `https://ipfs.infura.io/ipfs/${id}`
   const [formInput, updateFormInput] = useState({ authorAlias: '', comment: '' })
 
+
   useEffect(() => {
     if (update) {
       // First, update the view count by 1, then
