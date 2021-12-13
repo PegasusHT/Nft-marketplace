@@ -147,7 +147,7 @@ export default function MarketNFT(props) {
 
   return (
     <Col>
-      <Card className={`h-100 ${(!isDashboard && !isPurchased) ? 'Item-btn' : ''}`} style={{ width: "18rem" }} onClick={() => onclickNavigate()}>
+      <Card className={`h-100 ${!isPurchased ? 'Item-btn' : ''}`} style={{ width: "18rem" }} onClick={() => onclickNavigate()}>
         <Card.Img variant="top" src={nft.image} style={{ height: "100%", width: "100%", paddingTop: "1rem", paddingBottom: "1rem", objectFit: "cover" }} />
         <Card.Body>
           <Card.Title>{nft.name}</Card.Title>
@@ -165,7 +165,7 @@ export default function MarketNFT(props) {
                       <Button className="w-100"variant="secondary" disabled>Buy NFT</Button> 
                     </div>
                   </OverlayTrigger>
-                : <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
+                : <Button variant="primary" onClick={(e) => buy_action(e, nft)}>Buy NFT</Button>}
               <div className="favourite-div">
                 <FontAwesomeIcon className="comment-icon" icon={faComment} title="Comment" />
                 <span className="num-comment">{nftCom}</span>

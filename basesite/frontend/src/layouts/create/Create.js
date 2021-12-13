@@ -134,7 +134,7 @@ export default function CreateItem() {
               <Form.Control type="text" placeholder="Enter Artist Alias for your NFT" onChange={e => updateFormInput({ ...formInput, authorAlias: e.target.value })} />
             </Form.Group>
             <div className="d-grid gap-2">
-              <Button variant="primary" onClick={(e) => createMarket(e)}>
+              <Button variant="primary" disabled={(!formInput.name || !formInput.description || !formInput.price || !fileUrl || !formInput.authorAlias)} onClick={(e) => createMarket(e)}>
                 Create NFT
               </Button>
             </div>

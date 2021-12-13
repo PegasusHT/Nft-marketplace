@@ -120,7 +120,10 @@ export default function Details() {
     const wallet_address = connection.selectedAddress;
 
     const { authorAlias, comment } = formInput;
-    if (!comment || !authorAlias) alert("Comment and Author Alias must be filled in");
+    if (!comment || !authorAlias) {
+      alert("Comment and author alias fields must be filled in");
+      return;
+    }
     if (!wallet_address || !nft_token_id) return;
 
     fetch("http://localhost:8000/api/post_comment/", {
@@ -215,7 +218,7 @@ export default function Details() {
                   </Col>
                   <Col md={{ span: 3 }}>
                     <div className="d-grid gap-2">
-                      <Button variant="primary" type="submit">
+                      <Button disabled={(!formInput.authorAlias || !formInput.comment)} variant="primary" type="submit">
                         Post
                       </Button>
                     </div>

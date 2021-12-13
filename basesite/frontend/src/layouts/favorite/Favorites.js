@@ -76,6 +76,11 @@ export default function Favorites() {
   }
 
   async function buyNft(nft) {
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+
+    if (e.stopPropagation) e.stopPropagation();
+    
     // Allows for method to let user to sign the transaction
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
