@@ -51,7 +51,7 @@ export default function Details() {
 
             setNftDetails(nft_details);
             setNftMetadata(nft_metadata);
-            console.log(nft_metadata);
+            // console.log(nft_metadata);
           })
           .catch((error) => {
             console.error(error);

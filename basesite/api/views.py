@@ -91,21 +91,33 @@ def up_vote_comment(request):
         nftComment__id = comment_id,
         wallet_address = wallet_address
     )
-    comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
+    if comment_interaction_query_set.exists():
+        comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
+        if(is_up_voted):
+            nftComment.up_votes = nftComment.up_votes + 1
+            if(comment_interaction.is_down_voted):
+                nftComment.down_votes = max(0, nftComment.down_votes - 1)
+                comment_interaction.is_down_voted = False
+        else:
+            nftComment.up_votes = max(0, nftComment.up_votes - 1)
 
-    if(is_up_voted):
-        nftComment.up_votes = nftComment.up_votes + 1
-        if(comment_interaction.is_down_voted):
-            nftComment.down_votes = max(0, nftComment.down_votes - 1)
-            comment_interaction.is_down_voted = False
+        comment_interaction.is_up_voted = is_up_voted
+        comment_interaction.save()
+        nftComment.save()
+        response = serializers.serialize("json", [comment_interaction])
+        return HttpResponse(response)
     else:
-        nftComment.up_votes = max(0, nftComment.up_votes - 1)
-
-    comment_interaction.is_up_voted = is_up_voted
-    comment_interaction.save()
-    nftComment.save()
-    response = serializers.serialize("json", [comment_interaction])
-    return HttpResponse(response)
+        new_comment_interaction = CommentInteraction(
+            wallet_address=wallet_address,
+            nftComment_id=comment_id,
+            is_up_voted = is_up_voted
+        )
+        new_comment_interaction.save()
+        if(is_up_voted):
+            nftComment.up_votes = nftComment.up_votes + 1
+            nftComment.save()
+        response = serializers.serialize("json", [new_comment_interaction])
+        return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -137,21 +149,34 @@ def down_vote_comment(request):
         nftComment__id = comment_id,
         wallet_address = wallet_address
     )
-    comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
+    if comment_interaction_query_set.exists():
+        comment_interaction = comment_interaction_query_set.get(nftComment=nftComment)
+        if(is_down_voted):
+            nftComment.down_votes = nftComment.down_votes + 1
+            if(comment_interaction.is_up_voted):
+                nftComment.up_votes = max(0, nftComment.up_votes - 1)
+                comment_interaction.is_up_voted = False
+        else:
+            nftComment.down_votes = max(0, nftComment.down_votes - 1)
 
-    if(is_down_voted):
-        nftComment.down_votes = nftComment.down_votes + 1
-        if(comment_interaction.is_up_voted):
-            nftComment.up_votes = max(0, nftComment.up_votes - 1)
-            comment_interaction.is_up_voted = False
+        comment_interaction.is_down_voted = is_down_voted
+        comment_interaction.save()
+        nftComment.save()
+        response = serializers.serialize("json", [comment_interaction])
+        return HttpResponse(response)
     else:
-        nftComment.down_votes = max(0, nftComment.down_votes - 1)
+        new_comment_interaction = CommentInteraction(
+            wallet_address=wallet_address,
+            nftComment_id=comment_id,
+            is_down_voted = is_down_voted
+        )
+        new_comment_interaction.save()
+        if(is_down_voted):
+            nftComment.down_votes = nftComment.down_votes + 1
+            nftComment.save()
+        response = serializers.serialize("json", [new_comment_interaction])
+        return HttpResponse(response)
 
-    comment_interaction.is_down_voted = is_down_voted
-    comment_interaction.save()
-    nftComment.save()
-    response = serializers.serialize("json", [comment_interaction])
-    return HttpResponse(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -242,7 +267,6 @@ def get_comments(request):
     ).values()
     response = json.dumps(list(marketplace_comments))
     return HttpResponse(response)
-
 
 
 def raise_server_error(error_message):

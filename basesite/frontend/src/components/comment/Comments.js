@@ -11,11 +11,11 @@ export default function Comment(props) {
     const { comment } = props;
     const comment_id = comment.id;
 
-    const [upVoteIcon, setUpVoteIcon] = useState();
+    const [upVoteIcon, setUpVoteIcon] = useState(regularThumbsUp);
     const [upVoteState, setUpVoteState] = useState(false)
     const [upVoteCount, setUpVoteCount] = useState(comment.up_votes);
 
-    const [downVoteIcon, setDownVoteIcon] = useState();
+    const [downVoteIcon, setDownVoteIcon] = useState(regularThumbsDown);
     const [downVoteState, setDownVoteState] = useState(false)
     const [downVoteCount, setDownVoteCount] = useState(comment.down_votes);
     const [tipsCount, setTipsCount] = useState(comment.tips);
@@ -51,6 +51,7 @@ export default function Comment(props) {
             .catch((error) => {
                 // console.error(error);
             });
+
     }, []);
 
     async function upVoteComment() {

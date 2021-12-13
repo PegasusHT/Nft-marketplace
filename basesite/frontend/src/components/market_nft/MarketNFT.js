@@ -15,7 +15,7 @@ export default function MarketNFT(props) {
   const [favClass, setFavClass] = useState("favourite-btn");
   const [nftFav, setNftFav] = useState(0);
   const [nftCom, setNftCom] = useState(0);
-
+  const [isSeller, setIsSeller] = useState(false);
   const navigate = useNavigate();
 
   const nftHash = nft && nft.tokenUri.replace('https://ipfs.infura.io/ipfs/','');
@@ -90,6 +90,10 @@ export default function MarketNFT(props) {
     const connection = await web3Modal.connect()
     const wallet_address = connection.selectedAddress
 
+
+    if (nft.seller.toLowerCase() == wallet_address) {
+      setIsSeller("true")    }
+
     // Fetches the favourites of the current wallet address/account
     fetch('http://localhost:8000/api/get_wallet_favorites/', {
       method: 'POST',
@@ -147,7 +151,7 @@ export default function MarketNFT(props) {
           {nft.description}
         </Card.Text>
         <div className="d-grid gap-2">
-          <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>
+          { !isSeller && <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
         <div className='favourite-div'>
           <FontAwesomeIcon className='comment-icon' icon={faComment} title="Comment"/>
           <span className='num-comment'>{nftCom}</span>
