@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/create" element={<Create />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/nft/:id" element={<Details />} />
-        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/favourites" element={<Favorites />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>

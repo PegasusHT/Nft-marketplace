@@ -1,9 +1,9 @@
-import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+// Packages
+import { ethers } from "ethers"
+import { useEffect, useState } from "react"
+import axios from "axios"
 import Web3Modal from "web3modal"
-import { useNavigate } from 'react-router-dom';
-import { Container, CardGroup } from 'react-bootstrap';
+import { Container, Row } from "react-bootstrap";
 
 // Constants
 import { nftaddress, nftmarketaddress } from "../../constants/constants";
@@ -12,71 +12,70 @@ import { nftaddress, nftmarketaddress } from "../../constants/constants";
 import NFT from "../../contracts/NFT.json";
 import Market from "../../contracts/NFTMarket.json";
 
-import { Row, Card } from "react-bootstrap";
+// Components
+import MarketNFT from "../../components/market_nft/MarketNFT";
 
+export default function Profile() {
+  const [nfts, setNfts] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function MyAsset() {
-    const navigate = useNavigate();
-    const [nfts, setNfts] = useState([])
-    const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    loadNFTs();
+  }, []);
 
+  async function loadNFTs() {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-    useEffect(() => {
-        loadNFTs()
-    }, [])
+    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const data = await marketContract.fetchMyNFTs();
 
-    async function loadNFTs() {
-        const web3Modal = new Web3Modal({
-            network: "mainnet",
-            cacheProvider: true,
-        })
-        const connection = await web3Modal.connect()
-        const provider = new ethers.providers.Web3Provider(connection)
-        const signer = provider.getSigner()
+    // Map over items returned from smart contract and obtain metadata
+    const items = await Promise.all(data.map(async (i) => {
+      const tokenUri = await tokenContract.tokenURI(i.tokenId);
+      const meta = await axios.get(tokenUri);
+      const price = ethers.utils.formatUnits(i.price.toString(), "ether");
 
-        const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-        const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
-        const data = await marketContract.fetchMyNFTs()
+      let item = {
+        price,
+        tokenId: i.tokenId.toNumber(),
+        tokenUri: tokenUri,
+        seller: i.seller,
+        owner: i.owner,
+        sold: i.sold,
+        image: meta.data.image,
+        name: meta.data.name,
+        description: meta.data.description,
+      }
 
-        const items = await Promise.all(data.map(async i => {
-            const tokenUri = await tokenContract.tokenURI(i.tokenId)
-            const meta = await axios.get(tokenUri)
-            let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-            let item = {
-                price,
-                tokenId: i.tokenId.toNumber(),
-                seller: i.seller,
-                owner: i.owner,
-                image: meta.data.image,
-                name: meta.data.name,
-                description: meta.data.description,
-            }
-            return item
-        }))
-        setNfts(items)
-        setIsLoading(false);
-    }
+      return item;
+    }));
 
-    return (
-        <Container>
-            <h1>My Assets</h1>
-            {!nfts.length && !isLoading && <h3>No Assets</h3>}
-            <CardGroup>
-                {nfts.map((nft, i) =>
-                    <Card key={i} style={{ maxWidth: '18rem' }}>
-                        <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', paddingBottom: '1rem', objectFit: 'contain' }} />
-                        <Card.Body style={{ height: '10rem' }} >
-                            <Card.Title>{nft.name}</Card.Title>
-                            <Card.Text style={{ marginBottom: '0.3rem' }}>
-                                Description: {nft.description}
-                            </Card.Text>
-                            <Card.Text>
-                                Purchased Price: {nft.price} ETH
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                )}
-            </CardGroup>
-        </Container>
-    )
+    // Once the purchased items are fetched and parsed, set them and set loading to false
+    setNfts(items);
+    setIsLoading(false);
+  }
+
+  return (
+    <Container>
+      <h1>Purchases</h1>
+      {!nfts.length && !isLoading && (
+        <div>
+          <Container className="d-flex flex-column justify-content-center align-items-center" style={{ height: "80vh" }}>
+            <h3 className="text-muted">No Purchases</h3>
+            <br />
+            <h5 className="text-muted">Purchase a NFT to see it in this page!</h5>
+          </Container>
+        </div>
+      )}
+      <Container>
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+          {nfts.map((nft) => <MarketNFT nft={nft} isPurchased />)}
+        </Row>
+      </Container>
+    </Container>
+  )
 }

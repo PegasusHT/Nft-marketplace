@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -13,13 +13,13 @@ export default function Navigation() {
         <Navbar.Toggle aria-controls="nft-navbar" />
         <Navbar.Collapse id="nft-navbar">
           <Nav className="me-auto">
-            <Nav.Link onClick={() => navigate('/')}>Marketplace</Nav.Link>
-            <Nav.Link onClick={() => navigate('/favorite')}>Favorite</Nav.Link>
-            <Nav.Link onClick={() => navigate('/myasset')}>Profile</Nav.Link>
-            <Nav.Link onClick={() => navigate('/dashboard')}>Dashboard</Nav.Link>
+            <Nav.Link onClick={() => navigate("/")}>Marketplace</Nav.Link>
+            <Nav.Link onClick={() => navigate("/favourites")}>Favourites</Nav.Link>
+            <Nav.Link onClick={() => navigate("/profile")}>Profile</Nav.Link>
+            <Nav.Link onClick={() => navigate("/dashboard")}>Dashboard</Nav.Link>
           </Nav>
           <Nav>
-            <Button onClick={() => navigate('/create')}>Create a NFT</Button>
+            <Button onClick={() => navigate("/create")}>Create a NFT</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

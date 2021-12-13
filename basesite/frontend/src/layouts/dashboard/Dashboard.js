@@ -1,48 +1,45 @@
 // Packages
-import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import Web3Modal from "web3modal"
-import { Container, Row} from 'react-bootstrap';
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Web3Modal from "web3modal";
+import { Container, Row } from "react-bootstrap";
 
 // Constants
-import { nftaddress, nftmarketaddress } from '../../constants/constants'
+import { nftaddress, nftmarketaddress } from "../../constants/constants";
 
 // Contracts
-import NFT from '../../contracts/NFT.json'
-import Market from '../../contracts/NFTMarket.json'
+import NFT from "../../contracts/NFT.json";
+import Market from "../../contracts/NFTMarket.json";
 
 // Components
-import MarketNFT from '../../components/market_nft/MarketNFT';
+import MarketNFT from "../../components/market_nft/MarketNFT";
 
 export default function Home() {
-  const [nfts, setNfts] = useState([])
+  const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [soldNFTs, setSoldNFTs] = useState([]);
 
   useEffect(() => {
-    loadNFTs()
+    loadNFTs();
   }, [])
 
   async function loadNFTs() {
-    /* create a generic provider and query for unsold market items */
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-        
-    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
-    const data = await marketContract.fetchItemsCreated()
+    // Query for created NFTs
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-    /*
-    *  map over items returned from smart contract and format 
-    *  them as well as fetch their token metadata
-    */
-    const items = await Promise.all(data.map(async i => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId)
-      const meta = await axios.get(tokenUri)
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
+    const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const data = await marketContract.fetchItemsCreated();
+
+    const items = await Promise.all(data.map(async (i) => {
+      const tokenUri = await tokenContract.tokenURI(i.tokenId);
+      const meta = await axios.get(tokenUri);
+      let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+
       let item = {
         price,
         tokenId: i.tokenId.toNumber(),
@@ -54,54 +51,39 @@ export default function Home() {
         name: meta.data.name,
         description: meta.data.description,
       }
-      return item
-    }))
 
-    const soldItems = items.filter(item => item.sold)
-    setNfts(items)
-    // console.log(items)
-    setSoldNFTs(soldItems)
+      return item;
+    }));
+
+    const soldItems = items.filter(item => item.sold);
+
+    setNfts(items);
+    setSoldNFTs(soldItems);
     setIsLoading(false);
   }
 
-  async function buyNft(nft) {
-    /* needs the user to sign the transaction, so will use Web3Provider and sign it */
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-
-    /* user will be prompted to pay the asking proces to complete the transaction */
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
-    const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, {
-      value: price
-    })
-    await transaction.wait()
-    loadNFTs()
-  }
-
-  if (!nfts.length && !isLoading ) {
-      return (<h1>Empty Dashboard</h1>)
-  }
   return (
     <Container>
-        <Container>
-        <h1> Item Created</h1>
-        <Row lg={3} md={2}>
-            { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
+      <h1>Creator Dashboard</h1>
+      {!nfts.length && !isLoading && (
+        <div>
+          <Container className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
+            <h3 className="text-muted">Create a NFT to see creator dashboard information!</h3>
+          </Container>
+        </div>
+      )}
+      <Container className="py-3">
+        {nfts.length > 0 && <h3>Items Created</h3>}
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+          {nfts.map((nft) => <MarketNFT nft={nft} isDashboard />)}
         </Row>
-        </Container>
-
-        { !soldNFTs.length ? null: 
-        (
-            <Container>
-            <h1> Item Sold</h1>
-            <Row lg={3} md={2}>
-                { soldNFTs.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
-            </Row>
-            </Container>
-        )}
+      </Container>
+      <Container className="pt-3">
+        {nfts.length > 0 && <h3>Items Sold</h3>}
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+          {soldNFTs.map((nft) => <MarketNFT nft={nft} isDashboard />)}
+        </Row>
+      </Container>
     </Container>
-  )
+  );
 }

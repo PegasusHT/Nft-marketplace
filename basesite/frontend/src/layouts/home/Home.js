@@ -75,11 +75,11 @@ export default function Home() {
 
   return (
     <Container>
+      <h1>Marketplace</h1>
       {!nfts.length && !isLoading && (
         <div>
-          <h1>Empty Marketplace</h1>
           <Container className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
-            <h3 className="font-italic text-muted">Create an NFT to get started!</h3>
+            <h3 className="text-muted">Create a NFT to get started!</h3>
           </Container>
         </div>
       )}

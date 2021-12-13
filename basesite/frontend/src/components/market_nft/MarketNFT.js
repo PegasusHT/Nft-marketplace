@@ -12,7 +12,7 @@ import "../App.css";
 import ethereumIcon from "../../images/eth-icon.webp";
 
 export default function MarketNFT(props) {
-  const { nft, buy_action } = props;
+  const { nft, buy_action, isDashboard, isPurchased } = props;
   const navigate = useNavigate();
 
   const [favIcon, setFavIcon] = useState(lightHeart);
@@ -140,15 +140,14 @@ export default function MarketNFT(props) {
   function onclickNavigate() {
     if (!nft.sold) {
       navigate(`/nft/${nftHash}`);
-    }
-    else {
+    } else if (!isPurchased) {
       alert("This NFT has been sold. Unable to view this NFT in detail");
     }
   }
 
   return (
     <Col>
-      <Card className="Item-btn h-100" style={{ width: "18rem" }} onClick={() => onclickNavigate()}>
+      <Card className={`h-100 ${(!isDashboard && !isPurchased) ? 'Item-btn' : ''}`} style={{ width: "18rem" }} onClick={() => onclickNavigate()}>
         <Card.Img variant="top" src={nft.image} style={{ height: "100%", width: "100%", paddingTop: "1rem", paddingBottom: "1rem", objectFit: "cover" }} />
         <Card.Body>
           <Card.Title>{nft.name}</Card.Title>
@@ -158,21 +157,23 @@ export default function MarketNFT(props) {
             <br />
             {nft.description}
           </Card.Text>
-          <div className="d-grid gap-2">
-            {isSeller
-              ? <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">NFT was created by you</Tooltip>}>
-                  <div>
-                    <Button className="w-100"variant="secondary" disabled>Buy NFT</Button> 
-                  </div>
-                </OverlayTrigger>
-              : <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
-            <div className="favourite-div">
-              <FontAwesomeIcon className="comment-icon" icon={faComment} title="Comment" />
-              <span className="num-comment">{nftCom}</span>
-              <span className="num-favourite">{nftFav}</span>
-              <FontAwesomeIcon className={favClass} icon={favIcon} onClick={(e) => favouriteNft(e, nft)} title="Favourite" />
+          {(!isDashboard && !isPurchased) && 
+            <div className="d-grid gap-2">
+              {isSeller
+                ? <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">NFT was created by you</Tooltip>}>
+                    <div>
+                      <Button className="w-100"variant="secondary" disabled>Buy NFT</Button> 
+                    </div>
+                  </OverlayTrigger>
+                : <Button variant="primary" onClick={() => buy_action(nft)}>Buy NFT</Button>}
+              <div className="favourite-div">
+                <FontAwesomeIcon className="comment-icon" icon={faComment} title="Comment" />
+                <span className="num-comment">{nftCom}</span>
+                <span className="num-favourite">{nftFav}</span>
+                <FontAwesomeIcon className={favClass} icon={favIcon} onClick={(e) => favouriteNft(e, nft)} title="Favourite" />
+              </div>
             </div>
-          </div>
+          }
         </Card.Body>
       </Card>
     </Col>

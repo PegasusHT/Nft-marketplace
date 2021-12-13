@@ -1,21 +1,26 @@
 // Packages
-import { ethers } from 'ethers'
-import Web3Modal from "web3modal"
-import axios from 'axios';
-import '../../components/App.css'
-import React, { useEffect, useState, useRef } from 'react'
-import { Container, Card, Row, Col, Form, Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as lightHeart, faEye } from '@fortawesome/free-regular-svg-icons'
-import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'
-import Comment from '../../components/comment/Comments'
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
+import { Container, Card, Row, Col, Form, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as lightHeart, faEye } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+
+// Components
+import Comment from "../../components/comment/Comments";
+
+// Styles
+import "../../components/App.css";
+
 // Constants
-import { nftaddress, nftmarketaddress } from '../../constants/constants'
+import { nftaddress, nftmarketaddress } from "../../constants/constants";
 
 // Contracts
-import NFT from '../../contracts/NFT.json'
-import Market from '../../contracts/NFTMarket.json'
+import NFT from "../../contracts/NFT.json";
+import Market from "../../contracts/NFTMarket.json";
 
 export default function Details() {
   const { id } = useParams();
@@ -27,23 +32,21 @@ export default function Details() {
 
   const [validated, setValidated] = useState(false);
   const formRef = useRef(null);
-  const nft_token_id = `https://ipfs.infura.io/ipfs/${id}`
-  const [formInput, updateFormInput] = useState({ authorAlias: '', comment: '' })
-
+  const nft_token_id = `https://ipfs.infura.io/ipfs/${id}`;
+  const [formInput, updateFormInput] = useState({ authorAlias: "", comment: "" });
 
   useEffect(() => {
     if (update) {
-      // First, update the view count by 1, then
       // Grab the NFT details and metadata from the Django API server
       if (id) {
-        fetch('http://localhost:8000/api/nft_details/', {
-          method: 'POST',
+        fetch("http://localhost:8000/api/nft_details/", {
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
+            Accept: "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            'token_id': nft_token_id,
+            "token_id": nft_token_id,
           })
         }).then((response) => response.json())
           .then((result) => {
@@ -52,7 +55,6 @@ export default function Details() {
 
             setNftDetails(nft_details);
             setNftMetadata(nft_metadata);
-            // console.log(nft_metadata);
           })
           .catch((error) => {
             console.error(error);
@@ -60,14 +62,13 @@ export default function Details() {
       }
 
       fetch(`http://localhost:8000/api/get_comments/?token_id=${nft_token_id}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
       }).then((response) => response.json())
         .then((result) => {
-          // console.log(result);
           setNftComment(result);
         })
         .catch((error) => {
@@ -76,7 +77,6 @@ export default function Details() {
 
       loadNFTs();
       setUpdate(false);
-      // updateFormInput({ authorAlias: '', comment: ''});
     }
   }, [id, update]);
 
@@ -91,7 +91,7 @@ export default function Details() {
     const nfts = await Promise.all(data.map(async (i) => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId);
       const meta = await axios.get(tokenUri);
-      const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
+      const price = ethers.utils.formatUnits(i.price.toString(), "ether");
 
       return {
         price,
@@ -106,7 +106,7 @@ export default function Details() {
     }));
 
     // This is used to compare against the Django NFT API token_id
-    const tokenUri = 'https://ipfs.infura.io/ipfs/' + id;
+    const tokenUri = "https://ipfs.infura.io/ipfs/" + id;
 
     // Find the correct marketplace NFT given the token URI
     const nft = nfts.filter((nft) => nft.tokenUri === tokenUri);
@@ -115,39 +115,36 @@ export default function Details() {
 
   async function postComment(e) {
     e.preventDefault();
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const wallet_address = connection.selectedAddress
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const wallet_address = connection.selectedAddress;
 
-    const { authorAlias, comment } = formInput
-    if (!comment || !authorAlias || !wallet_address || !nft_token_id) return;
+    const { authorAlias, comment } = formInput;
+    if (!comment || !authorAlias) alert("Comment and Author Alias must be filled in");
+    if (!wallet_address || !nft_token_id) return;
 
-    fetch('http://localhost:8000/api/post_comment/', {
-      method: 'POST',
+    fetch("http://localhost:8000/api/post_comment/", {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        'token_id': nft_token_id,
-        'comment': comment,
-        'author_alias': authorAlias,
-        'author_address': wallet_address
+        "token_id": nft_token_id,
+        "comment": comment,
+        "author_alias": authorAlias,
+        "author_address": wallet_address,
       })
     }).then((response) => response.json())
       .then((json) => {
-        console.log(json);
         setUpdate(true);
-
       })
       .catch((error) => {
         console.error(error);
       });
 
-    // change callUpdate to update the page
-    console.log("posted comment");
-    updateFormInput({ authorAlias: '', comment: '' })
+    // Change callUpdate to update the page
+    updateFormInput({ authorAlias: "", comment: "" });
     setValidated(true);
     setUpdate(true);
     handleReset();
@@ -162,32 +159,32 @@ export default function Details() {
     <React.Fragment>
       {nft && (
         <Container>
-          <Row className="justify-content-center" >
+          <Row className="justify-content-center">
             {/* This will contain the details of the nft */}
-            <Card border="dark" style={{ width: '50vw' }} className="my-3">
-              <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', objectFit: 'cover' }} />
+            <Card border="dark" style={{ }} className="my-3">
+              <Card.Img variant="top" src={nft.image} style={{ height: "100%", width: "100%", maxWidth: "500px", paddingTop: "1rem", objectFit: "cover", margin: "auto" }} />
               <Card.Body>
                 <Card.Title as="h2" className="text-center py-1" >{nft.name}</Card.Title>
                 <Card.Text>
                   <Row>
-                    <Col sm={4} md={3} lg={2}><strong>Description</strong></Col>
+                    <Col lg={2}><strong>Description</strong></Col>
                     <Col>{nft.description}</Col>
                   </Row>
                   <Row>
-                    <Col sm={4} md={3} lg={2}><strong>Author</strong></Col>
+                    <Col lg={2}><strong>Author</strong></Col>
                     <Col>{nftDetails.author_alias}</Col>
                   </Row>
                   <Row>
-                    <Col sm={4} md={3} lg={2}><strong>Created</strong></Col>
+                    <Col lg={2}><strong>Created</strong></Col>
                     <Col>{nftMetadata.created_date}</Col>
-                    <Col md={1} lg={1}>
+                    <Col lg={1}>
                       {/* Favourites: {nftMetadata.favorites} */}
-                      <FontAwesomeIcon className='detail-fav-icon' icon={solidHeart} title="Favourite" />
-                      <span className='detail-num-fav'>{nftMetadata.favorites}</span>
+                      <FontAwesomeIcon className="detail-fav-icon" icon={solidHeart} title="Favourite" />
+                      <span className="detail-num-fav">{nftMetadata.favorites}</span>
                     </Col>
-                    <Col md={1} lg={1}>
-                      <FontAwesomeIcon className='detail-view-icon' icon={faEye} title="View" />
-                      <span className='num-view'>{nftMetadata.nft_views}</span>
+                    <Col lg={1}>
+                      <FontAwesomeIcon className="detail-view-icon" icon={faEye} title="View" />
+                      <span className="num-view">{nftMetadata.nft_views}</span>
                     </Col>
                   </Row>
                 </Card.Text>
@@ -195,7 +192,7 @@ export default function Details() {
             </Card>
           </Row>
           <Row>
-            <Container>
+            <Container className="py-3">
               {/* This will contain the comments */}
               <h2> Comments {nftMetadata.nft_comments}</h2>
                 { !nftComment.length && <p>No comment yet.</p> }
@@ -207,7 +204,7 @@ export default function Details() {
                     </Form.Group>
                   </Col>
                 </Row>
-                <Row className='post-comment-row'>
+                <Row className="post-comment-row">
                   <Col md={{ span: 1, offset: 5 }}>
                     <h6>Post as:</h6>
                   </Col>
@@ -227,8 +224,7 @@ export default function Details() {
               </Form>
             </Container>
           </Row>
-
-            <Row>
+          <Row>
             {nftComment.map((comment) => <Comment comment={comment} />)}
           </Row>
         </Container>
