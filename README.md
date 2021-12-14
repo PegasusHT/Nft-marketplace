@@ -20,54 +20,7 @@ There are many components to the application. Each section will contain its own 
 | Backened        | Django      | Django will be used to provide API endpoints to interact with NFT metadata
 | Ethereum Blockchain  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts on the blockchain
 
----             
-
-## Setting up MetaMask
-Metamask is a popular wallet for cryptocurrency that enables interaction with the NFT marketplace and other blockchain apps. <br>
-<b>Note: No "real" cyptocurrency is needed. Wallets preloaded with cryptocurrency (ETH) for testing/marking is provided.</b>
-
-1. Download MetaMask extension for your browser: \
-Firefox: [https://addons.mozilla.org/en-CA/firefox/addon/ether-metamask/]\
-Chrome: [https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en]
-
-2. Create a new wallet by following the steps in MetaMask after installing the extension
-
-3. Adjust Network Settings on MetaMask to connect to local blockchain
-    - Open MetaMask and click on your account (top right circle icon)
-    - Scroll down to settings -> then scroll down to networks 
-    - Click "Add Network"
-    - Configure the network as follows:
-    ![metamask_settings](/images/metamask_settings.png)
-
-4. Import an existing test account on MetaMask
-    - Open MetaMask and click on your account (top right circle icon)
-    - Select import account
-    - Paste the private key for one of the test accounts
-        ```
-        | Account     | Private Key       
-        | ----------- | ------------------------------------------------------------------ 
-        | Account #0  | 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-        | Account #1  | 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
-        | Account #2  | 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
-        | Account #3  | 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
-        | Account #4  | 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
-        | Account #5  | 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
-        | Account #6  | 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
-        | Account #7  | 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
-        | Account #8  | 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
-        | Account #9  | 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
-        | Account #10 | 0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897
-        | Account #11 | 0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82
-        | Account #12 | 0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1
-        | Account #13 | 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd
-        | Account #14 | 0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa
-        | Account #15 | 0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61
-        | Account #16 | 0xea6c44ac03bff858b476bba40716402b03e41b8e97e276d1baec7c37d42484a0
-        | Account #17 | 0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd
-        | Account #18 | 0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0
-        | Account #19 | 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
-        ```
----
+---       
 
 ## Running with Docker
 Inside the <code>basesite</code> directory bring the containers up:
@@ -106,21 +59,88 @@ blockchain_1  |   Gas used:            2519355 of 2519355
 blockchain_1  |   Block #2:            0x88943b510c56a9c6ff3cc6834de88dbf20a4a439b0cc18433c96f47951a35962
 ```
 
-Now, navigate to <http://localhost:8080/> and <http://localhost:8080/create>
-for the NFT marketplace and NFT creation views respectively
+Now, navigate to <http://localhost:8080/> for the NFT marketplace
+
+--- 
+
+## Setting up MetaMask
+Metamask is a popular wallet for cryptocurrency that enables interaction with the NFT marketplace and other blockchain apps. <br>
+<b>Note: No "real" cyptocurrency is needed. Wallets preloaded with cryptocurrency (ETH) for testing/marking is provided.</b>
+
+1. Download MetaMask extension for your browser: \
+Firefox: [https://addons.mozilla.org/en-CA/firefox/addon/ether-metamask/]\
+Chrome: [https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en]
+
+2. Create a new wallet by following the steps in MetaMask after installing the extension
+
+3. <b> Ensure that the blockchain is running in Docker on localhost at port 8545</b> <br>
+   The blockchain can be brought up via: <br>
+```
+docker-compose build && docker-compose up
+```
+
+
+4. Adjust Network Settings on MetaMask to connect to local blockchain
+    - Open MetaMask and click on your account (top right circle icon)
+    - Scroll down to settings -> then scroll down to networks 
+    - Click "Add Network"
+    - Configure the network as follows:
+    ![metamask_settings](/images/metamask_settings.png)
+
+5. Import an existing test account on MetaMask
+    - Open MetaMask and click on your account (top right circle icon)
+    - Select import account
+    - Paste the private key for one of the test accounts
+        ```
+        | Account     | Private Key       
+        | ----------- | ------------------------------------------------------------------ 
+        | Account #0  | 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+        | Account #1  | 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+        | Account #2  | 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+        | Account #3  | 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
+        | Account #4  | 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+        | Account #5  | 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
+        | Account #6  | 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+        | Account #7  | 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
+        | Account #8  | 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+        | Account #9  | 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+        | Account #10 | 0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897
+        | Account #11 | 0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82
+        | Account #12 | 0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1
+        | Account #13 | 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd
+        | Account #14 | 0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa
+        | Account #15 | 0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61
+        | Account #16 | 0xea6c44ac03bff858b476bba40716402b03e41b8e97e276d1baec7c37d42484a0
+        | Account #17 | 0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd
+        | Account #18 | 0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0
+        | Account #19 | 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
+        ```
+---
 
 # Features
+
+<b>Before the following can be tested/marked please ensure that Metamask has been configured following the steps above</b>
+
 #### Initially when we go to <http://localhost:8080/> we expect there to be no NFTs
-![no_nft_marketplace](/images/no_nft_marketplace.png)
+![no_nft_marketplace](/images/no_nft_marketplace2.png)
 
 #### Then we can go to <http://localhost:8080/create> to make an NFT. Observe that it costs 0.025 Ether in Gas for this transaction
-![create_nft](/images/create_nft.png)
+![create_nft](/images/create_nft2.png)
 
 #### After the transaction is complete, go back to <http://localhost:8080/> to see our created NFT
-![nft_marketplace](/images/nft_marketplace.png)
+![nft_marketplace](/images/nft_marketplace2.png)
 
 #### We can also buy an NFT with the buy button, go back to <http://localhost:8080/> to see NFTs to buy
-![buy_nft](/images/buy_nft.png)
+![buy_nft](/images/buy_nft2.png)
+
+#### We can view NFTs that we have purchased by go to <http://localhost:8080/profile>
+![nft_purchase](/images/nft_purchase.png)
+
+#### We can go to <http://localhost:8080/favourites> to view NFTs that you have favorited
+![nft_favorite](/images/nft_favorite.png)
+
+#### We can also go to <http://localhost:8080/dashboard> to view your dashboard. Dashboard contains NFTs that you have created and sold NFTs
+![nft_dashboard](/images/nft_dashboard.png)
 
 #### In our Docker logs, we can verify that the NFT creation (0.025 ETH) and Buy NFT (100 ETH) transactions are successful:
 ```
