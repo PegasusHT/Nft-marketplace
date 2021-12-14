@@ -48,7 +48,7 @@ export default function MyAsset() {
     return (
         <Container>
             <h1>My Assets</h1>
-            {!nfts.length && !isLoading && <h1>No Assets</h1>}
+            {!nfts.length && !isLoading && <h3>No Assets</h3>}
             <CardGroup>
                 {nfts.map((nft, i) =>
                     <Card key={i} style={{ maxWidth: '18rem' }}>
