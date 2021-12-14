@@ -15,15 +15,15 @@ import Market from '../../contracts/NFTMarket.json'
 // Components
 import MarketNFT from '../../components/market_nft/MarketNFT';
 
-export default function Home() {
-  const [nfts, setNfts] = useState([])
+export default function Favorites() {
   const [isLoading, setIsLoading] = useState(true);
+  const [favNFT, setFavNFT ] = useState([]);
 
   useEffect(() => {
-    loadNFTs()
+    loadFavoriteNFTs()
   }, [])
 
-  async function loadNFTs() {
+  async function loadFavoriteNFTs() {
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider()
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
@@ -44,16 +44,41 @@ export default function Home() {
         tokenUri: tokenUri,
         seller: i.seller,
         owner: i.owner,
-        sold: i.sold,
         image: meta.data.image,
         name: meta.data.name,
         description: meta.data.description,
       }
       return item
     }))
-    setNfts(items)
+
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const wallet_address = connection.selectedAddress
+
+    // Fetches the favourites of the current wallet address/account
+    fetch(`http://localhost:8000/api/get_wallet_favorites/?wallet_address=${wallet_address}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+    }).then((response) => response.json())
+      .then((result) => {
+        var new_result = result.map(nft => nft.token_id)
+        var favorite_items = items.filter(function (item) {
+          return new_result.includes(item.tokenUri)
+        })
+        setFavNFT(favorite_items)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     setIsLoading(false);
   }
+
+
+  // console.log("fav: ", favNFT)
 
   async function buyNft(nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
@@ -69,15 +94,15 @@ export default function Home() {
       value: price
     })
     await transaction.wait()
-    loadNFTs()
+    loadFavoriteNFTs()
   }
 
   return (
     <Container>
-      { !nfts.length && !isLoading && <h1>Empty Marketplace</h1> }
+      { !favNFT.length && !isLoading && <h1>Empty Favorite NFTs</h1> }
       <Container>
-        <Row lg={3} md={2}>
-          { nfts.map((nft) => <MarketNFT nft={nft} buy_action={buyNft} />)}
+      <Row lg={3} md={2}>
+        { favNFT.map((nft) => <MarketNFT nft={nft} buy_action={buyNft}/> )}
         </Row>
       </Container>
     </Container>
