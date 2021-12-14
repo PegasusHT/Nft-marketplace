@@ -128,7 +128,7 @@ For the various features below, we can buy, create, favorite and comment on vari
 
 2. Switching between imported accounts can be achieved as follows:
 - Open MetaMask and click on your account (top right circle icon)
-- Click on the account you wish to switch to:
+- Click on the account you wish to switch to: <br>
 ![account_switch](/images/account_switch.png)
 ---
 
