@@ -116,6 +116,21 @@ docker-compose build && docker-compose up
         | Account #19 | 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
         ```
 ---
+    
+## Switching Metamask Accounts
+In order to simulate different users, we can utilize the provided test accounts and their cryptocurrency.
+For the various features below, we can buy, create, favorite and comment on various NFTs as different "users" by switching Metamask accounts.
+
+1. Import the account you wish to switch to using the provided <code>Private Keys</code> above. 
+- Open MetaMask and click on your account (top right circle icon)
+- Select import account
+- Paste the private key for one of the test accounts
+
+2. Switching between imported accounts can be achieved as follows:
+- Open MetaMask and click on your account (top right circle icon)
+- Click on the account you wish to switch to:
+![account_switch](/images/account_switch.png)
+---
 
 # Features
 
@@ -125,21 +140,34 @@ docker-compose build && docker-compose up
 ![no_nft_marketplace](/images/no_nft_marketplace2.png)
 
 #### Then we can go to <http://localhost:8080/create> to make an NFT. Observe that it costs 0.025 Ether in Gas for this transaction
+<b>Switch metamask accounts in order to create NFTs as different "users"</b> <br>
 ![create_nft](/images/create_nft2.png)
 
 #### After the transaction is complete, go back to <http://localhost:8080/> to see our created NFT
 ![nft_marketplace](/images/nft_marketplace2.png)
 
 #### We can also buy an NFT with the buy button, go back to <http://localhost:8080/> to see NFTs to buy
+<b> The creator of the NFT cannot buy their own NFT. Switch metamask accounts in order to buy the NFT as a different "user"</b> <br>
 ![buy_nft](/images/buy_nft2.png)
 
 #### We can view NFTs that we have purchased by go to <http://localhost:8080/profile>
+<b>Switch metamask accounts to view NFTs that have been purchased by different "users"</b> <br>
 ![nft_purchase](/images/nft_purchase.png)
 
 #### We can go to <http://localhost:8080/favourites> to view NFTs that you have favorited
+<b>Switch metamask accounts in order to favorite NFTs as different "users"</b> <br>
 ![nft_favorite](/images/nft_favorite.png)
 
+#### Clicking on an NFT in the Marketplace brings upp the details view where users can post comments and upvote/downvote comments
+<b>Switch metamask accounts in order to comment and upvote/downvote as different "users"</b> <br>
+![nft_details](/images/nft_details.png)
+The transaction history and profile/dashboard pages show related NFT transaction for an associated wallet.
+These features have been completed by various group members. 
+In order to reflect the work done by all members these features have been left into the application.
+
+
 #### We can also go to <http://localhost:8080/dashboard> to view your dashboard. Dashboard contains NFTs that you have created and sold NFTs
+<b>Switch metamask accounts to view NFTs that have been created and sold NFTs by different "users"</b> <br>
 ![nft_dashboard](/images/nft_dashboard.png)
 
 #### In our Docker logs, we can verify that the NFT creation (0.025 ETH) and Buy NFT (100 ETH) transactions are successful:
