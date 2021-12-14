@@ -111,16 +111,25 @@ for the NFT marketplace and NFT creation views respectively
 
 # Features
 #### Initially when we go to <http://localhost:8080/> we expect there to be no NFTs
-![no_nft_marketplace](/images/no_nft_marketplace.png)
+![no_nft_marketplace](/images/no_nft_marketplace2.png)
 
 #### Then we can go to <http://localhost:8080/create> to make an NFT. Observe that it costs 0.025 Ether in Gas for this transaction
-![create_nft](/images/create_nft.png)
+![create_nft](/images/create_nft2.png)
 
 #### After the transaction is complete, go back to <http://localhost:8080/> to see our created NFT
-![nft_marketplace](/images/nft_marketplace.png)
+![nft_marketplace](/images/nft_marketplace2.png)
 
 #### We can also buy an NFT with the buy button, go back to <http://localhost:8080/> to see NFTs to buy
-![buy_nft](/images/buy_nft.png)
+![buy_nft](/images/buy_nft2.png)
+
+#### We can view NFTs that we have purchased by go to <http://localhost:8080/profile>
+![nft_purchase](/images/nft_purchase.png)
+
+#### We can go to <http://localhost:8080/favourites> to view NFTs that you have favorited
+![nft_favorite](/images/nft_favorite.png)
+
+#### We can also go to <http://localhost:8080/dashboard> to view your dashboard. Dashboard contains NFTs that you have created and sold NFTs
+![nft_dashboard](/images/nft_dashboard.png)
 
 #### In our Docker logs, we can verify that the NFT creation (0.025 ETH) and Buy NFT (100 ETH) transactions are successful:
 ```
