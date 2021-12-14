@@ -1,37 +1,36 @@
-import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
-import { create as ipfsHttpClient } from 'ipfs-http-client'
-
-import { useState } from 'react'
+// Packages
+import { ethers } from "ethers"
+import Web3Modal from "web3modal"
+import { create as ipfsHttpClient } from "ipfs-http-client"
+import { useState } from "react"
 import { useNavigate } from "react-router";
+import { Form, Button, Container, Col, Row, Card } from "react-bootstrap";
 
-import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
+// Constants
+import { nftaddress, nftmarketaddress } from "../../constants/constants";
 
-import { nftaddress, nftmarketaddress } from '../constants/constants'
+// Contracts
+import NFT from "../../contracts/NFT.json";
+import Market from "../../contracts/NFTMarket.json";
 
-import NFT from '../contracts/NFT.json'
-import Market from '../contracts/NFTMarket.json'
-
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0")
 
 export default function CreateItem() {
-  const [fileUrl, setFileUrl] = useState(null)
-  const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' , authorAlias: ''})
   const navigate = useNavigate();
+  const [fileUrl, setFileUrl] = useState(null);
+  const [formInput, updateFormInput] = useState({ price: "", name: "", description: "", authorAlias: "" });
 
   async function onChange(e) {
     const file = e.target.files[0]
     try {
       const added = await client.add(
         file,
-        {
-          progress: (prog) => console.log(`received: ${prog}`)
-        }
+        { progress: (prog) => console.log(`received: ${prog}`) }
       )
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url)
     } catch (error) {
-      console.log('Error uploading file: ', error)
+      console.log("Error uploading file: ", error);
     }
   }
   async function createMarket(e) {
@@ -51,7 +50,7 @@ export default function CreateItem() {
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
       createSale(url);
     } catch (error) {
-      console.log('Error uploading file: ', error);
+      console.log("Error uploading file: ", error);
     }
   }
 
@@ -71,7 +70,7 @@ export default function CreateItem() {
     let value = event.args[2];
     let tokenId = value.toNumber();
 
-    const price = ethers.utils.parseUnits(formInput.price, 'ether');
+    const price = ethers.utils.parseUnits(formInput.price, "ether");
 
     /* then list the item for sale on the marketplace */
     contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
@@ -81,15 +80,15 @@ export default function CreateItem() {
     transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: listingPrice });
     await transaction.wait();
 
-    fetch('http://localhost:8000/api/create_nft/', {
-      method: 'POST',
+    fetch("http://localhost:8000/api/create_nft/", {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        'token_id': url,
-        'author_alias': formInput.authorAlias
+        "token_id": url,
+        "author_alias": formInput.authorAlias
       })
     }).then((response) => response.json())
       .then((json) => {
@@ -99,7 +98,7 @@ export default function CreateItem() {
         console.error(error);
       });
 
-    navigate('/');
+    navigate("/");
   }
 
   return (
@@ -135,7 +134,7 @@ export default function CreateItem() {
               <Form.Control type="text" placeholder="Enter Artist Alias for your NFT" onChange={e => updateFormInput({ ...formInput, authorAlias: e.target.value })} />
             </Form.Group>
             <div className="d-grid gap-2">
-              <Button variant="primary" onClick={(e) => createMarket(e)}>
+              <Button variant="primary" disabled={(!formInput.name || !formInput.description || !formInput.price || !fileUrl || !formInput.authorAlias)} onClick={(e) => createMarket(e)}>
                 Create NFT
               </Button>
             </div>

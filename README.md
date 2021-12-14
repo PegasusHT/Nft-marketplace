@@ -7,9 +7,9 @@
 - Hamlet Jiang Su
 
 ## Overview
-The NFT Marketplace is a web-based system for users to Create, Buy and Interact with Non-Fungible Tokens (NFTs). <br>
-All transactions for creating and buying NFT assets are backed by the decentralized [Ethereum Blockchain](https://ethereum.org/). <br>
-Users interact with the marketplace and blockchain by connecting their MetaMask wallets to create and buy digit assets with cryptocurrency (ETH).
+The NFT Marketplace is a web-based system for users to Create, Buy and Interact with Non-Fungible Tokens (NFTs). All transactions for creating and buying NFT assets are backed by the decentralized [Ethereum Blockchain](https://ethereum.org/). <br>
+
+Users interact with the marketplace and blockchain by connecting their MetaMask wallets to create and buy digital assets with cryptocurrency (ETH).
 
 ## Overall Structure
 There are many components to the application. Each section will contain its own README for information regarding the use of the tool.
@@ -17,7 +17,7 @@ There are many components to the application. Each section will contain its own 
 | Structure       | Tool        | Description
 | -----------     | ----------- | -----------
 | Frontend        | React       | React will be responsible for handling the view, and enable the use of Metamask to handle transactions
-| Backened        | Django      | Django will be used to provide API endpoints to interact with NFT metadata
+| Backend        | Django      | Django will be used to provide API endpoints to interact with NFT metadata including comments, upvotes and downvotes, favourites, and tips.
 | Ethereum Blockchain  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts on the blockchain
 
 ---       
@@ -59,7 +59,7 @@ blockchain_1  |   Gas used:            2519355 of 2519355
 blockchain_1  |   Block #2:            0x88943b510c56a9c6ff3cc6834de88dbf20a4a439b0cc18433c96f47951a35962
 ```
 
-Now, navigate to <http://localhost:8080/> for the NFT marketplace
+Once the docker containers have started, navigate to <http://localhost:8080/> to see the NFT marketplace.
 
 --- 
 
@@ -85,6 +85,7 @@ docker-compose build && docker-compose up
     - Scroll down to settings -> then scroll down to networks 
     - Click "Add Network"
     - Configure the network as follows:
+
     ![metamask_settings](/images/metamask_settings.png)
 
 5. Import an existing test account on MetaMask
