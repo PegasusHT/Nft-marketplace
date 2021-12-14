@@ -161,13 +161,13 @@ For the various features below, we can buy, create, favorite and comment on vari
 #### Clicking on an NFT in the Marketplace brings upp the details view where users can post comments and upvote/downvote comments
 <b>Switch metamask accounts in order to comment and upvote/downvote as different "users"</b> <br>
 ![nft_details](/images/nft_details.png)
-The transaction history and profile/dashboard pages show related NFT transaction for an associated wallet.
-These features have been completed by various group members. 
-In order to reflect the work done by all members these features have been left into the application.
 
 
 #### We can also go to <http://localhost:8080/dashboard> to view your dashboard. Dashboard contains NFTs that you have created and sold NFTs
 <b>Switch metamask accounts to view NFTs that have been created and sold NFTs by different "users"</b> <br>
+The transaction history and profile/dashboard pages show related NFT transaction for an associated wallet.
+These features have been completed by various group members. 
+In order to reflect the work done by all members these features have been left into the application.
 ![nft_dashboard](/images/nft_dashboard.png)
 
 #### In our Docker logs, we can verify that the NFT creation (0.025 ETH) and Buy NFT (100 ETH) transactions are successful:
