@@ -65,35 +65,16 @@ export default function TransactionsHistory() {
         setNfts(items)
         setLoadingState('loaded')
     }
-    if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets created</h1>)
+    if (loadingState === 'loaded' && !Boolean(sold.length) && !Boolean(bought.length))
+        return (<h1 style={{marginLeft: "10%"}}>Empty history.</h1>)
     return (
         <Container>
-            <Container>
-                <h1>Created items</h1>
-                {!nfts.length && loadingState ==='loaded' && <h1>No Assets</h1>}
-                <CardGroup>
-                    {nfts.map((nft, i) =>
-                        <Card key={i} style={{ maxWidth: '18rem' }}>
-                            <Card.Img variant="top" src={nft.image} style={{ height: '100%', width: '100%', paddingTop: '1rem', paddingBottom: '1rem', objectFit: 'cover' }} />
-                            <Card.Body style={{ height: '10rem' }} >
-                                <Card.Title>{nft.name}</Card.Title>
-                                <Card.Text style={{ marginBottom: '0.3rem' }}>
-                                    Description: {nft.description}
-                                </Card.Text>
-                                <Card.Text>
-                                    Purchased Price: {nft.price} ETH
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    )}
-                </CardGroup>
-            </Container>
-
+            <h1>Sold items</h1>
+            {!sold.length && loadingState ==='loaded' && <h1>No assets sold.</h1>}
             <Container>
                 {
                     Boolean(sold.length) && (
                         <Container>
-                            <h1>Sold items</h1>
                             <CardGroup>
                                 {sold.map((nft, i) =>
                                     <Card key={i} style={{ maxWidth: '18rem' }}>
@@ -116,10 +97,11 @@ export default function TransactionsHistory() {
             </Container>
 
             <Container>
+                <h1>Bought items</h1>
+                {!bought.length && loadingState ==='loaded' && <h1>No assets bought.</h1>}
                 {
                     Boolean(bought.length) && (
                         <Container>
-                            <h1>Bought items</h1>
                             <CardGroup>
                                 {bought.map((nft, i) =>
                                     <Card key={i} style={{ maxWidth: '18rem' }}>
