@@ -1,11 +1,5 @@
 # NFT Marketplace
 
-## Group 19 (web hacks)
-- Colin Kwok
-- Duong Dang Khoa Au
-- Quoc Huy Bui
-- Hamlet Jiang Su
-
 ## Overview
 The NFT Marketplace is a web-based system for users to Create, Buy and Interact with Non-Fungible Tokens (NFTs). All transactions for creating and buying NFT assets are backed by the decentralized [Ethereum Blockchain](https://ethereum.org/). <br>
 
@@ -21,7 +15,9 @@ There are many components to the application. Each section will contain its own 
 | Ethereum Blockchain  | Hardhat     | Hardhat will be used to create, compile, and deploy the smart contracts on the blockchain
 
 ---       
-
+## My accomplishments
+I implemented full stack for comments interactions, up vote, down vote and tips. Profile
+page and transaction history page. Restyle the comments.
 ## Running with Docker
 Inside the <code>basesite</code> directory bring the containers up:
 ```shell
